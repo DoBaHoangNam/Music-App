@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MusicApp</string>
+    <string name="title_activity_getting_started">GettingStartedActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="textStart1">The background and control button color change according to the album art from the now playing screen</string>
+    <string name="start2">The background and control button color change according to the album art from the now playing screen</string>
+    <string name="default_web_client_id">73970558205-l6a2eda1li09l2ojmhuucgc40rmlni02.apps.googleusercontent.com</string>
+</resources>

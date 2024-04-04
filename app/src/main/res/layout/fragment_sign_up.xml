@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.FragmentSignUp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:background="@color/light_blue">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnBack"
+        android:layout_width="@dimen/definite_dimen_50"
+        android:layout_height="@dimen/definite_dimen_50"
+        android:background="@drawable/back_btn"
+        android:layout_marginStart="@dimen/definite_dimen_20"
+        android:layout_marginTop="@dimen/definite_dimen_20"
+        />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/logoAnim"
+        android:layout_width="@dimen/definite_dimen_100"
+        android:layout_height="@dimen/definite_dimen_100"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/logo_loti" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create\nAccount"
+        android:textSize="@dimen/text_size_xxhuge"
+        android:textStyle="bold"
+        android:textColor="@color/grey"
+        android:layout_marginStart="@dimen/definite_dimen_20"
+        android:layout_marginEnd="@dimen/definite_dimen_20"
+        />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/email_ti"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/definite_dimen_12"
+                android:hint="Email"
+                >
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/definite_dimen_18"
+                    android:layout_marginRight="@dimen/definite_dimen_18"
+                    android:background="@drawable/text_input"
+                    android:drawableStart="@drawable/mail"
+                    android:drawablePadding="@dimen/definite_dimen_14"
+                    android:paddingTop="20dp"
+
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/pwd_ti"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:passwordToggleEnabled="true"
+                android:layout_marginTop="@dimen/definite_dimen_12"
+                android:hint="Password"
+                >
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/definite_dimen_18"
+                    android:layout_marginRight="@dimen/definite_dimen_18"
+                    android:background="@drawable/text_input"
+                    android:drawableStart="@drawable/lock_icon"
+                    android:drawablePadding="@dimen/definite_dimen_14"
+
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/definite_dimen_12">
+                <CheckBox
+                    android:id="@+id/confirmCheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginStart="@dimen/definite_dimen_20"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="I agree to the Term &amp; Condition\nand Privacy Policy."
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/grey"
+
+                    android:layout_marginEnd="@dimen/definite_dimen_20"
+                    android:gravity="left"
+                    />
+            </LinearLayout>
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sign_in_btn"
+                android:text="Create account"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingBottom="@dimen/definite_dimen_4"
+                android:layout_marginTop="@dimen/definite_dimen_20"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSignUpWithGoogle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign up with google"
+                android:textAllCaps="false"
+                android:textColor="@color/grey"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:drawableLeft="@drawable/google_logo"
+                android:paddingLeft="@dimen/definite_dimen_40"
+                android:paddingRight="@dimen/definite_dimen_40"
+                android:background="@drawable/sign_in_with_google" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="@dimen/definite_dimen_20">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Already have an account ? "
+                    android:textSize="@dimen/text_size_small"
+                    android:textStyle="bold"
+                    android:textColor="@color/grey"
+                    android:layout_marginStart="@dimen/definite_dimen_20"
+                    />
+                <TextView
+                    android:id="@+id/tvSignIn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Sign in"
+                    android:textSize="@dimen/text_size_small"
+                    android:textStyle="bold"
+                    android:textColor="@color/pink"
+                    android:layout_marginEnd="@dimen/definite_dimen_20"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+</LinearLayout>

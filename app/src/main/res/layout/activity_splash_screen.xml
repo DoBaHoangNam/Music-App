@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_blue"
+    tools:context=".ui.ActivitySplashScreen">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/logoAnim"
+        android:layout_width="@dimen/definite_dimen_150"
+        android:layout_height="@dimen/definite_dimen_150"
+        app:lottie_rawRes="@raw/logo_loti"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        android:layout_marginTop="@dimen/definite_dimen_150"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sofiapro_light"
+        android:text="MUSIC DREAM"
+        android:textSize="@dimen/text_size_huge"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logoAnim" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="203dp"
+        android:layout_height="199dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        android:elevation="@dimen/definite_dimen_1"
+        app:lottie_rawRes="@raw/note_music_loti"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sofiapro_light"
+        android:text="Designed by Hoang Nam"
+        android:textSize="@dimen/text_size_small"
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/definite_dimen_12"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:elevation="@dimen/definite_dimen_2"
+         />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

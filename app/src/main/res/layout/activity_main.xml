@@ -1,0 +1,202 @@
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.MainActivity">
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/slidingUp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:layout_above="@+id/bottomNavigationView"
+        app:umanoPanelHeight="@dimen/definite_dimen_50"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mainScreen"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light_blue">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ExtraText">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/logoAnim"
+                    android:layout_width="@dimen/definite_dimen_60"
+                    android:layout_height="@dimen/definite_dimen_60"
+                    android:layout_marginStart="@dimen/definite_dimen_8"
+                    android:layout_marginTop="@dimen/definite_dimen_10"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/logo_loti" />
+
+                <TextView
+                    android:id="@+id/tvExplore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginEnd="@dimen/definite_dimen_40"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/sofia_pro_bold"
+                    android:maxLines="1"
+                    android:text="Music Dream"
+                    android:textSize="@dimen/text_size_xxnormal" />
+
+                <ImageView
+                    android:id="@+id/icSetting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="@dimen/definite_dimen_14"
+                    android:src="@drawable/baseline_settings_24" />
+
+                <ImageView
+                    android:id="@+id/icSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="@dimen/definite_dimen_14"
+                    android:src="@drawable/baseline_search_24" />
+
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <fragment
+                android:id="@+id/fragmentContainerView2"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/definite_dimen_4"
+                android:layout_marginTop="@dimen/definite_dimen_16"
+                android:layout_marginEnd="@dimen/definite_dimen_4"
+                app:defaultNavHost="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolBar"
+                app:navGraph="@navigation/navigation"
+                tools:layout_editor_absoluteX="1dp"
+                tools:layout_editor_absoluteY="368dp" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main_bottom_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rounded_blue_button2"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="40dp"
+            app:layout_anchor="@id/mainScreen"
+            app:layout_anchorGravity="bottom">
+
+            <LinearLayout
+                android:id="@+id/small_control_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:orientation="horizontal"
+                app:behavior_hideable="true"
+                android:layout_marginTop="@dimen/definite_dimen_5"
+                android:layout_marginStart="@dimen/definite_dimen_5"
+                android:weightSum="5">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="@dimen/definite_dimen_40"
+                    android:layout_height="@dimen/definite_dimen_40"
+                    android:src="@drawable/album_image"
+                    app:shapeAppearanceOverlay="@style/circle"
+                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/definite_dimen_12"
+                    android:layout_weight="2.5"
+                    android:gravity="center"
+                    >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Về quê"
+                        android:textSize="@dimen/text_size_small"
+                        android:textStyle="bold"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Về quê"
+
+                        android:textSize="@dimen/text_size_xxsmall"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="2"
+                    android:gravity="center_vertical|center_horizontal|right">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="@dimen/definite_dimen_30"
+                        android:layout_height="@dimen/definite_dimen_30"
+                        android:background="@drawable/baseline_skip_previous_24"
+
+                        />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="@dimen/definite_dimen_30"
+                        android:layout_height="@dimen/definite_dimen_30"
+                        android:background="@drawable/baseline_play_arrow_24"
+                        />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="@dimen/definite_dimen_30"
+                        android:layout_height="@dimen/definite_dimen_30"
+                        android:background="@drawable/baseline_skip_next_24"
+                        />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <include
+                android:id="@+id/bottom_sheet_now_playing"
+                layout="@layout/bottom_sheet_now_playing" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/light_blue"
+        app:menu="@menu/menu" />
+
+
+
+
+</RelativeLayout >
