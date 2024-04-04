@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.FragmentStep3">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/imf_getting_started_33"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/definite_dimen_20"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <TextView
+        android:id="@+id/heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Share your\nplaylist"
+        android:fontFamily="@font/sofiapro_light"
+        android:textSize="@dimen/text_size_xxxhuge"
+        android:textStyle="bold"
+        android:textAlignment="textStart"
+        android:layout_marginTop="@dimen/definite_dimen_20"
+        android:layout_marginStart="@dimen/definite_dimen_20"
+        android:layout_marginEnd="@dimen/definite_dimen_20"
+        app:layout_constraintTop_toBottomOf="@id/image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/start2"
+        android:fontFamily="@font/sofiapro_light"
+        android:textSize="@dimen/text_size_normal"
+        android:textAlignment="textStart"
+        android:layout_marginStart="@dimen/definite_dimen_20"
+        android:layout_marginEnd="@dimen/definite_dimen_20"
+        android:layout_marginTop="@dimen/definite_dimen_12"
+        app:layout_constraintTop_toBottomOf="@id/heading"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <ImageView
+        android:id="@+id/pageStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/img_tab_3"
+        android:gravity="left"
+        android:layout_marginBottom="@dimen/definite_dimen_10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/getStartedBtn"/>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/getStartedBtn"
+        android:layout_width="@dimen/definite_dimen_200"
+        android:layout_height="@dimen/definite_dimen_80"
+        android:layout_marginBottom="@dimen/definite_dimen_10"
+        android:background="@drawable/get_start_button"
+        android:fontFamily="@font/sofiapro_light"
+        android:textSize="@dimen/text_size_huge"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

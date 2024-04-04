@@ -1,0 +1,4 @@
+<style android:name="circle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:name="cornerSize">50%</item>
+</style>
