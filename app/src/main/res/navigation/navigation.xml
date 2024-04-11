@@ -10,4 +10,24 @@
         android:name="com.example.musicapp.fragment.FragmentForYou"
         android:label="fragment_for_you"
         tools:layout="@layout/fragment_for_you" />
+    <fragment
+        android:id="@+id/fragmentSongs"
+        android:name="com.example.musicapp.fragment.FragmentSongs"
+        android:label="fragment_songs"
+        tools:layout="@layout/fragment_songs" />
+    <fragment
+        android:id="@+id/fragmentAlbum"
+        android:name="com.example.musicapp.fragment.FragmentAlbum"
+        android:label="fragment_album"
+        tools:layout="@layout/fragment_album" />
+    <fragment
+        android:id="@+id/fragmentPlaylist"
+        android:name="com.example.musicapp.fragment.FragmentPlaylist"
+        android:label="fragment_playlist"
+        tools:layout="@layout/fragment_playlist" />
+    <fragment
+        android:id="@+id/fragmentArtist"
+        android:name="com.example.musicapp.fragment.FragmentArtist"
+        android:label="fragment_artist"
+        tools:layout="@layout/fragment_artist" />
 </navigation>

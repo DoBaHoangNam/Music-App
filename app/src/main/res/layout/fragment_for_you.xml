@@ -6,6 +6,59 @@
     android:layout_height="match_parent"
     tools:context=".fragment.FragmentForYou">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ExtraText">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/logoAnim"
+            android:layout_width="@dimen/definite_dimen_60"
+            android:layout_height="@dimen/definite_dimen_60"
+            android:layout_marginStart="@dimen/definite_dimen_8"
+            android:layout_marginTop="@dimen/definite_dimen_10"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/logo_loti" />
+
+        <TextView
+            android:id="@+id/tvExplore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center"
+            android:layout_marginEnd="@dimen/definite_dimen_40"
+            android:ellipsize="end"
+            android:fontFamily="@font/sofia_pro_bold"
+            android:maxLines="1"
+            android:text="Music Dream"
+            android:textSize="@dimen/text_size_xxnormal" />
+
+        <ImageView
+            android:id="@+id/icSetting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/definite_dimen_14"
+            android:src="@drawable/baseline_settings_24" />
+
+        <ImageView
+            android:id="@+id/icSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/definite_dimen_14"
+            android:src="@drawable/baseline_search_24" />
+
+
+    </androidx.appcompat.widget.Toolbar>
+
 
     <LinearLayout
         android:id="@+id/welcomeLn"
@@ -15,7 +68,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolBar"
         android:weightSum="1">
 
         <LinearLayout
@@ -164,7 +217,7 @@
                 android:id="@+id/recvSuggestion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/definite_dimen_20"
+                android:layout_marginStart="@dimen/definite_dimen_10"
                 android:layout_marginEnd="@dimen/definite_dimen_20"
                 android:layout_marginTop="@dimen/definite_dimen_18"
                 android:layout_marginBottom="@dimen/definite_dimen_10"/>

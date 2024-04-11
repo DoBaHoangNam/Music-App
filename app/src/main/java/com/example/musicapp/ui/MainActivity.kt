@@ -2,6 +2,7 @@ package com.example.musicapp.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -14,6 +15,7 @@ import com.example.musicapp.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import de.hdodenhof.circleimageview.CircleImageView
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -39,10 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         imageView = binding.imgSong
 
-
-
-
-
+        binding.tvNameSongPlaying.isSelected = true
 
 
         layout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
