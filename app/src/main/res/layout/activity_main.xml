@@ -27,72 +27,18 @@
             android:clickable="true"
             android:focusable="true">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ExtraText">
-
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/logoAnim"
-                    android:layout_width="@dimen/definite_dimen_60"
-                    android:layout_height="@dimen/definite_dimen_60"
-                    android:layout_marginStart="@dimen/definite_dimen_8"
-                    android:layout_marginTop="@dimen/definite_dimen_10"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:lottie_autoPlay="true"
-                    app:lottie_loop="true"
-                    app:lottie_rawRes="@raw/logo_loti" />
-
-                <TextView
-                    android:id="@+id/tvExplore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginEnd="@dimen/definite_dimen_40"
-                    android:ellipsize="end"
-                    android:fontFamily="@font/sofia_pro_bold"
-                    android:maxLines="1"
-                    android:text="Music Dream"
-                    android:textSize="@dimen/text_size_xxnormal" />
-
-                <ImageView
-                    android:id="@+id/icSetting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="@dimen/definite_dimen_14"
-                    android:src="@drawable/baseline_settings_24" />
-
-                <ImageView
-                    android:id="@+id/icSearch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="@dimen/definite_dimen_14"
-                    android:src="@drawable/baseline_search_24" />
-
-
-            </androidx.appcompat.widget.Toolbar>
-
             <fragment
                 android:id="@+id/fragmentContainerView2"
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="@dimen/definite_dimen_4"
-                android:layout_marginTop="@dimen/definite_dimen_16"
                 android:layout_marginEnd="@dimen/definite_dimen_4"
                 app:defaultNavHost="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolBar"
+                app:layout_constraintTop_toTopOf="parent"
                 app:navGraph="@navigation/navigation"
                 tools:layout_editor_absoluteX="1dp"
                 tools:layout_editor_absoluteY="368dp" />
@@ -126,7 +72,7 @@
                 <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="@dimen/definite_dimen_40"
                     android:layout_height="@dimen/definite_dimen_40"
-                    android:src="@drawable/album_image"
+                    android:src="@drawable/img_song"
                     app:shapeAppearanceOverlay="@style/circle"
                     />
 
@@ -138,18 +84,27 @@
                     android:layout_weight="2.5"
                     android:gravity="center"
                     >
+
                     <TextView
-                        android:layout_width="match_parent"
+                        android:id="@+id/tvNameSongPlaying"
+                        android:layout_width="@dimen/definite_dimen_200"
                         android:layout_height="wrap_content"
-                        android:text="Về quê"
+                        android:text="Tây Bắc Thả Chiều Vào Tranh "
                         android:textSize="@dimen/text_size_small"
                         android:textStyle="bold"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
+                        android:marqueeRepeatLimit ="marquee_forever"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:scrollHorizontally="true"
+                        android:layout_gravity="left"
                         />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Về quê"
-
+                        android:text="Sèn Hoàng Mỹ Lam"
+                        android:layout_marginStart="@dimen/definite_dimen_2"
                         android:textSize="@dimen/text_size_xxsmall"
                         />
 

@@ -4,17 +4,17 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/rounded_blue_button"
+    android:layout_marginTop="@dimen/definite_dimen_16"
     android:layout_marginEnd="@dimen/definite_dimen_8"
-    android:layout_marginTop="@dimen/definite_dimen_8"
+    android:layout_marginStart="@dimen/definite_dimen_8"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="@dimen/definite_dimen_10"
-
         app:cardCornerRadius="@dimen/definite_dimen_18">
 
         <ImageView
@@ -34,7 +34,7 @@
         android:layout_marginBottom="@dimen/definite_dimen_8"
         android:text="Sơn Tùng MPT"
         android:textSize="@dimen/text_size_small"
-        android:fontFamily="@font/sofia_pro_bold"
+        android:textStyle="bold"
         android:textAlignment="center"
         android:drawablePadding="@dimen/definite_dimen_8"/>
 

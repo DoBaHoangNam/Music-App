@@ -2,21 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:title="For you"
-        android:id="@+id/forYouFragment"
+        android:id="@+id/fragmentForYou"
         android:icon="@drawable/for_you_icon" />
     <item android:title="Songs"
-        android:id="@+id/songsFragment"
+        android:id="@+id/fragmentSongs"
         android:icon="@drawable/song_icon"/>
     <item
         android:title="Albums"
-        android:id="@+id/albumFragment"
+        android:id="@+id/fragmentAlbum"
         android:icon="@drawable/album_icon" />
     <item
         android:title="Artists"
-        android:id="@+id/artistsFragment"
+        android:id="@+id/fragmentArtist"
         android:icon="@drawable/artist_icon" />
     <item
         android:title="Playlists"
-        android:id="@+id/playlistsFragment"
+        android:id="@+id/fragmentPlaylist"
         android:icon="@drawable/playlist_icon" />
 </menu>
