@@ -1,7 +1,11 @@
 package com.example.musicapp.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.media.AudioManager
 import android.os.Bundle
+import android.provider.Settings
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
@@ -21,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var imageView: CircleImageView
 
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +36,6 @@ class MainActivity : AppCompatActivity() {
         binding.bottomSheetNowPlaying.visibility = View.INVISIBLE
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
-
-        binding.icPlay.setOnClickListener {
-            Log.d("aaaaaaaaaaaaaaaaaa", "bbbbbbbbbbb")
-        }
-        binding.playBtn.setOnClickListener {
-            Log.d("aaaaaaaaaaaaaaaaaa", "aaaaaaaaaaaaaaaaaa")
-        }
 
         imageView = binding.imgSong
 
@@ -80,8 +78,14 @@ class MainActivity : AppCompatActivity() {
         var bottomnav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomnav.setupWithNavController(navController)
 
+        binding.icVolume.setOnClickListener {
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_SAME, AudioManager.FLAG_SHOW_UI)
+        }
+
 
     }
+
 
     private fun startRotation() {
         object : Runnable {
