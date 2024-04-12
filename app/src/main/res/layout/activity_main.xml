@@ -277,7 +277,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/toolBar3"
+                    app:layout_constraintBottom_toTopOf="@id/timing"
                     app:layout_constraintTop_toBottomOf="@id/toolBar2"
                     android:layout_marginEnd="@dimen/definite_dimen_40"
                     android:layout_marginStart="@dimen/definite_dimen_40"
@@ -285,6 +285,41 @@
                     android:progress="50"
 
                     />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/timing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/seekBar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/toolBar3">
+
+                    <TextView
+                        android:id="@+id/startTimeTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="0:00"
+                        android:gravity="left"
+                        android:layout_marginStart="@dimen/definite_dimen_40"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        />
+                    <TextView
+                        android:id="@+id/endTimeTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="3:00"
+                        android:layout_gravity="end"
+                        android:layout_marginStart="@dimen/definite_dimen_40"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginEnd="@dimen/definite_dimen_40"
+                        />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolBar3"
@@ -295,7 +330,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/seekBar"
+                    app:layout_constraintTop_toBottomOf="@id/timing"
                     android:layout_marginBottom="@dimen/definite_dimen_40"
                     android:gravity="center"
                     >
