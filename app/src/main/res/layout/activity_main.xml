@@ -1,7 +1,7 @@
-<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/overlayView"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/overlayView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_blue"
@@ -11,16 +11,14 @@
         android:id="@+id/slidingUp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom"
         android:layout_above="@+id/bottomNavigationView"
-        app:umanoPanelHeight="@dimen/definite_dimen_50"
         android:clickable="true"
         android:focusable="true"
-        >
+        android:gravity="bottom"
+        app:umanoPanelHeight="@dimen/definite_dimen_50">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/mainScreen"
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/light_blue"
@@ -60,61 +58,59 @@
                 android:id="@+id/small_control_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="@dimen/definite_dimen_5"
+                android:layout_marginTop="@dimen/definite_dimen_5"
+                android:orientation="horizontal"
+                android:weightSum="5"
+                app:behavior_hideable="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:orientation="horizontal"
-                app:behavior_hideable="true"
-                android:layout_marginTop="@dimen/definite_dimen_5"
-                android:layout_marginStart="@dimen/definite_dimen_5"
-                android:weightSum="5">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="@dimen/definite_dimen_40"
                     android:layout_height="@dimen/definite_dimen_40"
                     android:src="@drawable/img_song"
-                    app:shapeAppearanceOverlay="@style/circle"
-                    />
+                    app:shapeAppearanceOverlay="@style/circle" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
                     android:layout_marginStart="@dimen/definite_dimen_12"
                     android:layout_weight="2.5"
                     android:gravity="center"
-                    >
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tvNameSongPlaying"
                         android:layout_width="@dimen/definite_dimen_200"
                         android:layout_height="wrap_content"
-                        android:text="Tây Bắc Thả Chiều Vào Tranh "
-                        android:textSize="@dimen/text_size_small"
-                        android:textStyle="bold"
-                        android:singleLine="true"
+                        android:layout_gravity="left"
                         android:ellipsize="marquee"
-                        android:marqueeRepeatLimit ="marquee_forever"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
+                        android:marqueeRepeatLimit="marquee_forever"
                         android:scrollHorizontally="true"
-                        android:layout_gravity="left"
-                        />
+                        android:singleLine="true"
+                        android:text="Tây Bắc Thả Chiều Vào Tranh "
+                        android:textSize="@dimen/text_size_small"
+                        android:textStyle="bold" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Sèn Hoàng Mỹ Lam"
                         android:layout_marginStart="@dimen/definite_dimen_2"
-                        android:textSize="@dimen/text_size_xxsmall"
-                        />
+                        android:text="Sèn Hoàng Mỹ Lam"
+                        android:textSize="@dimen/text_size_xxsmall" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
                     android:layout_weight="2"
-                    android:gravity="center_vertical|center_horizontal|right">
+                    android:gravity="center_vertical|center_horizontal|right"
+                    android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:layout_width="@dimen/definite_dimen_30"
@@ -122,17 +118,17 @@
                         android:background="@drawable/baseline_skip_previous_24"
 
                         />
+
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/icPlay"
                         android:layout_width="@dimen/definite_dimen_30"
                         android:layout_height="@dimen/definite_dimen_30"
-                        android:background="@drawable/baseline_play_arrow_24"
-                        />
+                        android:background="@drawable/baseline_play_arrow_24" />
+
                     <androidx.appcompat.widget.AppCompatButton
                         android:layout_width="@dimen/definite_dimen_30"
                         android:layout_height="@dimen/definite_dimen_30"
-                        android:background="@drawable/baseline_skip_next_24"
-                        />
+                        android:background="@drawable/baseline_skip_next_24" />
 
 
                 </LinearLayout>
@@ -144,10 +140,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/light_blue"
-                tools:context=".fragment.BottomSheetNowPlaying"
-                android:focusable="true"
                 android:clickable="true"
-                >
+                android:focusable="true"
+                tools:context=".fragment.BottomSheetNowPlaying">
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolBar1"
@@ -159,6 +154,7 @@
                     tools:ignore="ExtraText">
 
                     <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnCollapse"
                         android:layout_width="@dimen/definite_dimen_30"
                         android:layout_height="@dimen/definite_dimen_30"
                         android:background="@drawable/baseline_keyboard_arrow_down_24" />
@@ -208,11 +204,10 @@
                     android:layout_height="@dimen/definite_dimen_200"
                     android:layout_marginTop="@dimen/definite_dimen_80"
                     android:src="@drawable/img_song"
+                    app:layout_constraintBottom_toTopOf="@id/tvSongName"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/toolBar1"
-                    app:layout_constraintBottom_toTopOf="@id/tvSongName"
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/toolBar1" />
 
                 <TextView
                     android:id="@+id/tvSongName"
@@ -223,10 +218,10 @@
                     android:textAlignment="center"
                     android:textSize="@dimen/text_size_xxnormal"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/tvSingerName"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/imgSong"
-                    app:layout_constraintBottom_toTopOf="@id/tvSingerName"/>
+                    app:layout_constraintTop_toBottomOf="@id/imgSong" />
 
                 <TextView
                     android:id="@+id/tvSingerName"
@@ -237,10 +232,10 @@
                     android:textAlignment="center"
                     android:textSize="@dimen/text_size_normal"
                     android:textStyle="normal"
+                    app:layout_constraintBottom_toTopOf="@id/toolBar2"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvSongName"
-                    app:layout_constraintBottom_toTopOf="@id/toolBar2"/>
+                    app:layout_constraintTop_toBottomOf="@id/tvSongName" />
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolBar2"
@@ -248,11 +243,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/definite_dimen_20"
                     android:orientation="horizontal"
+                    app:layout_constraintBottom_toTopOf="@id/seekBar"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/seekBar"
-                    app:layout_constraintTop_toBottomOf="@id/tvSingerName"
-                    >
+                    app:layout_constraintTop_toBottomOf="@id/tvSingerName">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -261,13 +255,22 @@
                         android:layout_marginStart="@dimen/definite_dimen_60"
                         android:background="@drawable/baseline_favorite_border_24" />
 
+                    <pl.droidsonroids.gif.GifImageView
+                        android:id="@+id/btnShareLoti"
+                        android:layout_width="@dimen/definite_dimen_24"
+                        android:layout_height="@dimen/definite_dimen_24"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/share_file"
+                        />
+
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/definite_dimen_20"
                         android:layout_gravity="end"
-                        android:background="@drawable/baseline_add_24"
-                        android:layout_marginEnd="@dimen/definite_dimen_60"/>
+                        android:layout_marginStart="@dimen/definite_dimen_20"
+                        android:layout_marginEnd="@dimen/definite_dimen_60"
+                        android:background="@drawable/baseline_add_24" />
 
                 </androidx.appcompat.widget.Toolbar>
 
@@ -275,14 +278,14 @@
                     android:id="@+id/seekBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/timing"
-                    app:layout_constraintTop_toBottomOf="@id/toolBar2"
-                    android:layout_marginEnd="@dimen/definite_dimen_40"
                     android:layout_marginStart="@dimen/definite_dimen_40"
+                    android:layout_marginEnd="@dimen/definite_dimen_40"
                     android:max="100"
                     android:progress="50"
+                    app:layout_constraintBottom_toTopOf="@id/timing"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/toolBar2"
 
                     />
 
@@ -290,34 +293,33 @@
                     android:id="@+id/timing"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/seekBar"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/toolBar3"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/toolBar3">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/seekBar">
 
                     <TextView
                         android:id="@+id/startTimeTv"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="0:00"
-                        android:gravity="left"
                         android:layout_marginStart="@dimen/definite_dimen_40"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
+                        android:gravity="left"
+                        android:text="0:00"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
                     <TextView
                         android:id="@+id/endTimeTv"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="3:00"
                         android:layout_gravity="end"
                         android:layout_marginStart="@dimen/definite_dimen_40"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         android:layout_marginEnd="@dimen/definite_dimen_40"
-                        />
+                        android:text="3:00"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -326,33 +328,33 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/definite_dimen_20"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/timing"
                     android:layout_marginBottom="@dimen/definite_dimen_40"
                     android:gravity="center"
-                    >
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/timing">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/definite_dimen_20"
                         android:background="@drawable/baseline_shuffle_24" />
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:background="@drawable/baseline_skip_previous_24" />
+
                     <TextView
                         android:id="@+id/playBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/definite_dimen_50"
-                        android:background="@drawable/baseline_play_arrow_24"
-                        />
+                        android:background="@drawable/baseline_play_arrow_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -360,14 +362,14 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/definite_dimen_50"
                         android:background="@drawable/baseline_skip_next_24" />
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
-                        android:layout_marginEnd="@dimen/definite_dimen_20"
                         android:layout_gravity="right"
+                        android:layout_marginEnd="@dimen/definite_dimen_20"
                         android:background="@drawable/baseline_repeat_24" />
-
 
 
                 </androidx.appcompat.widget.Toolbar>
@@ -376,8 +378,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
@@ -391,6 +391,4 @@
         app:menu="@menu/menu" />
 
 
-
-
-</RelativeLayout >
+</RelativeLayout>

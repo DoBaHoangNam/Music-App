@@ -40,7 +40,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/definite_dimen_12"
             android:layout_marginEnd="@dimen/definite_dimen_10"
-            android:layout_weight="2"
+            android:layout_weight="5"
             android:orientation="vertical">
 
             <TextView

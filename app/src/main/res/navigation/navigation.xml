@@ -24,10 +24,23 @@
         android:id="@+id/fragmentPlaylist"
         android:name="com.example.musicapp.fragment.FragmentPlaylist"
         android:label="fragment_playlist"
-        tools:layout="@layout/fragment_playlist" />
+        tools:layout="@layout/fragment_playlist" >
+        <action
+            android:id="@+id/action_fragmentPlaylist_to_fragmentPlaylistSpecific"
+            app:destination="@id/fragmentPlaylistSpecific" />
+    </fragment>
     <fragment
         android:id="@+id/fragmentArtist"
         android:name="com.example.musicapp.fragment.FragmentArtist"
         android:label="fragment_artist"
         tools:layout="@layout/fragment_artist" />
+    <fragment
+        android:id="@+id/fragmentPlaylistSpecific"
+        android:name="com.example.musicapp.fragment.FragmentPlaylistSpecific"
+        android:label="fragment_playlist_specific"
+        tools:layout="@layout/fragment_playlist_specific" >
+        <action
+            android:id="@+id/action_fragmentPlaylistSpecific_to_fragmentPlaylist"
+            app:destination="@id/fragmentPlaylist" />
+    </fragment>
 </navigation>
