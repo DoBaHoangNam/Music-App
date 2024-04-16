@@ -6,18 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicapp.ActivitySearch
 import com.example.musicapp.R
-import com.example.musicapp.adapter.AlbumAdapter
 import com.example.musicapp.adapter.SongAdapter
-import com.example.musicapp.databinding.FragmentSongsBinding
-import com.example.musicapp.model.Album
+import com.example.musicapp.databinding.FragmentForYouBinding
+import com.example.musicapp.databinding.FragmentPlaylistSpecificBinding
 import com.example.musicapp.model.Song
 
+class FragmentPlaylistSpecific : Fragment() {
+    private lateinit var binding: FragmentPlaylistSpecificBinding
 
-class FragmentSongs : Fragment() {
-    private lateinit var binding: FragmentSongsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,24 +29,24 @@ class FragmentSongs : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSongsBinding.inflate(inflater, container, false)
+        // Inflate the layout for this fragment
+        binding = FragmentPlaylistSpecificBinding.inflate(inflater, container, false)
         displaySong()
+        binding.btnBack.setOnClickListener {
+            findNavController().navigate(R.id.action_fragmentPlaylistSpecific_to_fragmentPlaylist)
+        }
         binding.icSearch.setOnClickListener {
             val intent = Intent(requireContext(), ActivitySearch::class.java)
             startActivity(intent)
         }
-
-
         return binding.root
-
-
     }
 
     private fun displaySong() {
-        binding.recvSong.layoutManager =
+        binding.recvSongInPlayList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         val adapter = SongAdapter(getListSong())
-        binding.recvSong.adapter = adapter
+        binding.recvSongInPlayList.adapter = adapter
     }
 
     private fun getListSong(): MutableList<Song> {
@@ -64,6 +65,5 @@ class FragmentSongs : Fragment() {
         return list
 
     }
-
 
 }

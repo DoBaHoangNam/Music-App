@@ -16,6 +16,7 @@ class SongAdapter(private val items: MutableList<Song>) :
     private var selectedItemPosition: Int = RecyclerView.NO_POSITION
 
 
+
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val singerName: TextView = itemView.findViewById(R.id.tvSingerName1)
         val songName: TextView = itemView.findViewById(R.id.tvSongName1)
@@ -45,9 +46,6 @@ class SongAdapter(private val items: MutableList<Song>) :
         }
 
 
-        holder.itemView.setOnClickListener {
-            setSelectedItem(holder.adapterPosition)
-        }
     }
 
     override fun getItemCount(): Int {
@@ -58,4 +56,5 @@ class SongAdapter(private val items: MutableList<Song>) :
         selectedItemPosition = position
         notifyDataSetChanged() // Cập nhật lại RecyclerView để vẽ lại giao diện
     }
+
 }

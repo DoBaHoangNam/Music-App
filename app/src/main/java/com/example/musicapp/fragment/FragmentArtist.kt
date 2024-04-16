@@ -1,11 +1,13 @@
 package com.example.musicapp.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.musicapp.ActivitySearch
 import com.example.musicapp.R
 import com.example.musicapp.adapter.AlbumAdapter
 import com.example.musicapp.adapter.ArtistAdapter
@@ -32,6 +34,10 @@ class FragmentArtist : Fragment() {
     ): View? {
         binding = FragmentArtistBinding.inflate(inflater, container, false)
         displayAlbum()
+        binding.icSearch.setOnClickListener {
+            val intent = Intent(requireContext(), ActivitySearch::class.java)
+            startActivity(intent)
+        }
 
         return binding.root
     }

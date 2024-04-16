@@ -10,12 +10,19 @@ import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.musicapp.R
 import com.example.musicapp.databinding.ActivityMainBinding
+import com.example.musicapp.fragment.FragmentAlbum
+import com.example.musicapp.fragment.FragmentArtist
+import com.example.musicapp.fragment.FragmentForYou
+import com.example.musicapp.fragment.FragmentPlaylist
+import com.example.musicapp.fragment.FragmentPlaylistSpecific
+import com.example.musicapp.fragment.FragmentSongs
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import de.hdodenhof.circleimageview.CircleImageView
@@ -26,7 +33,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var imageView: CircleImageView
 
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -40,6 +46,10 @@ class MainActivity : AppCompatActivity() {
         imageView = binding.imgSong
 
         binding.tvNameSongPlaying.isSelected = true
+
+        binding.btnCollapse.setOnClickListener {
+            layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+        }
 
 
         layout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
@@ -81,6 +91,19 @@ class MainActivity : AppCompatActivity() {
         binding.icVolume.setOnClickListener {
             val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
             audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_SAME, AudioManager.FLAG_SHOW_UI)
+        }
+
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.fragmentForYou, R.id.fragmentSongs, R.id.fragmentArtist, R.id.fragmentPlaylist, R.id.fragmentAlbum -> {
+                    bottomNavigationView.visibility = View.VISIBLE
+                }
+                R.id.fragmentPlaylistSpecific -> {
+                    //bottomNavigationView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_down))
+                    bottomNavigationView.visibility = View.GONE
+                }
+            }
         }
 
 
