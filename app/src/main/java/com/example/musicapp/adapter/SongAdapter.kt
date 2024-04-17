@@ -45,6 +45,10 @@ class SongAdapter(private val items: MutableList<Song>) :
             holder.songName.isSelected = false
         }
 
+        holder.itemView.setOnClickListener {
+            setSelectedItem(holder.adapterPosition)
+        }
+
 
     }
 
