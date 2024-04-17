@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="8">
+
+    <TextView
+        android:id="@+id/tvSearchContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="7"
+        android:text="Sông hồng"
+        android:layout_marginStart="@dimen/definite_dimen_20"
+        android:layout_marginTop="@dimen/definite_dimen_10"/>
+
+    <TextView
+        android:id="@+id/icClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/baseline_close_24"
+        android:layout_marginEnd="@dimen/definite_dimen_10"
+        android:layout_marginTop="@dimen/definite_dimen_10"/>
+
+
+
+</LinearLayout>

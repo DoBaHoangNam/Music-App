@@ -57,6 +57,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolBar"
         app:queryHint="What do you want to search?" />
+    <TextView
+        android:id="@+id/headingOfRecTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Recent Searches"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_edt"
+        android:layout_marginStart="@dimen/definite_dimen_10"
+        android:layout_marginEnd="@dimen/definite_dimen_10"
+        android:layout_marginTop="@dimen/definite_dimen_18"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recvSearchList"
@@ -68,7 +79,21 @@
         android:layout_marginBottom="@dimen/definite_dimen_10"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_edt"/>
+        app:layout_constraintTop_toBottomOf="@id/headingOfRecTV"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recvRecentList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/definite_dimen_10"
+        android:layout_marginEnd="@dimen/definite_dimen_10"
+        android:layout_marginTop="@dimen/definite_dimen_18"
+        android:layout_marginBottom="@dimen/definite_dimen_10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headingOfRecTV"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,33 +1,51 @@
 package com.example.musicapp
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musicapp.adapter.RecentSearchAdapter
 import com.example.musicapp.adapter.SongAdapter
 import com.example.musicapp.databinding.ActivitySearchBinding
+import com.example.musicapp.model.RecentSearch
 import com.example.musicapp.model.Song
 import com.example.musicapp.ui.MainActivity
+import com.google.common.reflect.TypeToken
+import com.google.gson.Gson
 
-class ActivitySearch : AppCompatActivity() {
+class ActivitySearch : AppCompatActivity(), OnRecentSearchItemClickListener {
 
     private lateinit var binding: ActivitySearchBinding
     private lateinit var adapter: SongAdapter
+    private lateinit var adapter2: RecentSearchAdapter
     private lateinit var originalMenuFood: MutableList<Song>
     private val filterMenuFood = mutableListOf<Song>()
+    private val recentSearch = mutableListOf<RecentSearch>()
+    private val PREF_NAME = "MyPrefs"
+    private val KEY_RECENT_SEARCH = "recent_search"
+    private lateinit var sharedPreferences: SharedPreferences
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        recentSearch.addAll(getRecentSearchFromSharedPreferences())
+
+
         binding.recvSearchList.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         adapter = SongAdapter(filterMenuFood)
         binding.recvSearchList.adapter = adapter
+        originalMenuFood = getListSong()
         setupSearchView()
-        showAllMenu()
+        showRecent()
+
 
         binding.btnBack.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -36,16 +54,65 @@ class ActivitySearch : AppCompatActivity() {
         }
     }
 
+    private fun getRecentSearchFromSharedPreferences(): MutableList<RecentSearch> {
+        val json = sharedPreferences.getString(KEY_RECENT_SEARCH, null)
+        val type = object : TypeToken<MutableList<RecentSearch>>() {}.type
+        return Gson().fromJson(json, type) ?: mutableListOf()
+    }
+
+    private fun saveRecentSearchToSharedPreferences(recentSearchList: MutableList<RecentSearch>) {
+        val editor = sharedPreferences.edit()
+        val json = Gson().toJson(recentSearchList)
+        editor.putString(KEY_RECENT_SEARCH, json)
+        editor.apply()
+    }
+
+    private fun showRecent() {
+        binding.headingOfRecTV.text = "Recent Searches"
+        binding.recvRecentList.visibility = View.VISIBLE
+        binding.recvSearchList.visibility = View.INVISIBLE
+
+        binding.recvRecentList.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        adapter2 = RecentSearchAdapter(recentSearch, this, object : RecentSearchListener {
+            override fun saveRecentSearch(recentSearchList: MutableList<RecentSearch>) {
+                saveRecentSearchToSharedPreferences(recentSearchList)
+            }
+        })
+        binding.recvRecentList.adapter = adapter2
+
+    }
+
+    private fun addToRecentSearchIfNotExist(query: String) {
+        if (!recentSearch.any { it.content == query }) {
+            recentSearch.add(RecentSearch(query))
+            adapter2.notifyDataSetChanged()
+            saveRecentSearchToSharedPreferences(recentSearch)
+        }
+    }
+
+
     private fun setupSearchView() {
         binding.searchEdt.setOnQueryTextListener(object :
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 filterMenuItems(query)
+                addToRecentSearchIfNotExist(query.trim())
+                adapter2.notifyDataSetChanged()
+                saveRecentSearchToSharedPreferences(recentSearch)
+                if(query.isEmpty()){
+                    showRecent()
+                }
                 return true
             }
 
             override fun onQueryTextChange(query: String): Boolean {
                 filterMenuItems(query)
+                binding.headingOfRecTV.text = "Tracks"
+
+                if(query.isEmpty()){
+                    showRecent()
+                }
                 return true
             }
         })
@@ -55,6 +122,9 @@ class ActivitySearch : AppCompatActivity() {
 
 
     private fun filterMenuItems(query: String) {
+        binding.recvRecentList.visibility = View.INVISIBLE
+        binding.recvSearchList.visibility = View.VISIBLE
+
         filterMenuFood.clear()
 
         originalMenuFood.forEach { item ->
@@ -115,5 +185,9 @@ class ActivitySearch : AppCompatActivity() {
         list.add(Song("Tàu Anh Qua Nui", "Anh Thơ", R.drawable.img_song))
         return list
 
+    }
+
+    override fun onItemClick(searchContent: String) {
+        binding.searchEdt.setQuery(searchContent,true)
     }
 }
