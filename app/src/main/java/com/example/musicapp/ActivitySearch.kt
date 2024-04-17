@@ -74,7 +74,11 @@ class ActivitySearch : AppCompatActivity(), OnRecentSearchItemClickListener {
 
         binding.recvRecentList.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        adapter2 = RecentSearchAdapter(recentSearch, this)
+        adapter2 = RecentSearchAdapter(recentSearch, this, object : RecentSearchListener {
+            override fun saveRecentSearch(recentSearchList: MutableList<RecentSearch>) {
+                saveRecentSearchToSharedPreferences(recentSearchList)
+            }
+        })
         binding.recvRecentList.adapter = adapter2
 
     }

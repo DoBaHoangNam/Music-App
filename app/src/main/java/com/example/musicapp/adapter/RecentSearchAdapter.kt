@@ -7,11 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicapp.OnRecentSearchItemClickListener
 import com.example.musicapp.R
+import com.example.musicapp.RecentSearchListener
 import com.example.musicapp.model.RecentSearch
 
 class RecentSearchAdapter(
     private val items: MutableList<RecentSearch>,
-    private val itemClickListener: OnRecentSearchItemClickListener
+    private val itemClickListener: OnRecentSearchItemClickListener,
+    private val recentSearchListener: RecentSearchListener?
 ) :
     RecyclerView.Adapter<RecentSearchAdapter.ViewHolder>() {
 
@@ -46,6 +48,7 @@ class RecentSearchAdapter(
 
         holder.closeBtn.setOnClickListener {
             deleteItem(position)
+            recentSearchListener?.saveRecentSearch(items)
         }
 
     }
