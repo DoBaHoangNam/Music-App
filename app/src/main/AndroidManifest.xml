@@ -15,7 +15,7 @@
         android:theme="@style/Theme.MusicApp"
         tools:targetApi="31">
         <activity
-            android:name=".ActivitySearch"
+            android:name=".ui.ActivitySearch"
             android:exported="false" />
         <activity
             android:name=".ActivitySignUp"

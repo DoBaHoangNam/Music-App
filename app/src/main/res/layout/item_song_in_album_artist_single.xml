@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:weightSum="8"
+    android:paddingBottom="@dimen/definite_dimen_10">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/definite_dimen_20"
+        android:layout_marginEnd="@dimen/definite_dimen_20"
+        android:layout_marginTop="@dimen/definite_dimen_16">
+
+        <TextView
+            android:id="@+id/tvNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="01"
+            android:textAlignment="center"
+            android:maxLines="6"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/songPlayAnim1"
+            android:layout_width="@dimen/definite_dimen_30"
+            android:layout_height="@dimen/definite_dimen_30"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/sound_loti"
+            android:visibility="invisible"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <TextView
+        android:id="@+id/tvSongName2"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="6"
+        android:text="Sông hồng"
+        android:layout_marginTop="@dimen/definite_dimen_10"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:layout_gravity="center"
+        android:marqueeRepeatLimit ="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollHorizontally="true"
+        android:layout_marginEnd="@dimen/definite_dimen_14"/>
+
+    <TextView
+        android:id="@+id/tvLength"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0.05"
+        android:text="5:06"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/definite_dimen_10"
+        android:layout_marginTop="@dimen/definite_dimen_10"/>
+    <TextView
+        android:id="@+id/icClose"
+        android:layout_width="@dimen/definite_dimen_24"
+        android:layout_height="@dimen/definite_dimen_24"
+        android:layout_weight="0.05"
+        android:background="@drawable/baseline_more_vert_24"
+        android:layout_marginEnd="@dimen/definite_dimen_10"
+        android:layout_marginTop="@dimen/definite_dimen_16"/>
+
+
+
+</LinearLayout>

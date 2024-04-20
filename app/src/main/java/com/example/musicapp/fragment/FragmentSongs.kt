@@ -7,12 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.musicapp.ActivitySearch
+import com.example.musicapp.ui.ActivitySearch
 import com.example.musicapp.R
-import com.example.musicapp.adapter.AlbumAdapter
 import com.example.musicapp.adapter.SongAdapter
 import com.example.musicapp.databinding.FragmentSongsBinding
-import com.example.musicapp.model.Album
 import com.example.musicapp.model.Song
 
 

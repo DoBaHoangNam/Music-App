@@ -14,6 +14,7 @@ import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.musicapp.R
 import com.example.musicapp.databinding.ActivityMainBinding
@@ -26,6 +27,10 @@ import com.example.musicapp.fragment.FragmentSongs
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -71,13 +76,18 @@ class MainActivity : AppCompatActivity() {
                 previousState: SlidingUpPanelLayout.PanelState?,
                 newState: SlidingUpPanelLayout.PanelState?,
             ) {
+                val currentFragmentId = findNavController(R.id.fragmentContainerView2).currentDestination?.id
                 if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
                     bottomNavigationView.visibility = View.GONE
 
                 } else if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     bottomNavigationView.animate().translationY(0f)
                         .setInterpolator(AccelerateDecelerateInterpolator()).start()
-                    bottomNavigationView.visibility = View.VISIBLE
+
+                    if (currentFragmentId == R.id.fragmentPlaylistSpecific || currentFragmentId == R.id.fragmentAlbumSingle ) {
+                        bottomNavigationView.visibility = View.GONE
+                    }else{
+                    bottomNavigationView.visibility = View.VISIBLE}
 
                 }
             }
@@ -99,13 +109,28 @@ class MainActivity : AppCompatActivity() {
                 R.id.fragmentForYou, R.id.fragmentSongs, R.id.fragmentArtist, R.id.fragmentPlaylist, R.id.fragmentAlbum -> {
                     bottomNavigationView.visibility = View.VISIBLE
                 }
-                R.id.fragmentPlaylistSpecific -> {
+                R.id.fragmentPlaylistSpecific, R.id.fragmentAlbumSingle -> {
                     //bottomNavigationView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_down))
                     bottomNavigationView.visibility = View.GONE
                 }
             }
         }
 
+        var isFavorite = false
+        binding.icAddToFavorite.setOnClickListener {
+
+            if (isFavorite) {
+                binding.icAddToFavorite.setImageResource(R.drawable.baseline_favorite_border_blue_24)
+            } else {
+                binding.icLove.visibility = View.VISIBLE
+                binding.icAddToFavorite.setImageResource(R.drawable.baseline_favorite_24)
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(2000)
+                    binding.icLove.visibility = View.INVISIBLE
+                }
+            }
+            isFavorite = !isFavorite
+        }
 
     }
 
