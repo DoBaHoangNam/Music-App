@@ -6,10 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import com.example.musicapp.ActivitySearch
+import com.example.musicapp.ui.ActivitySearch
 import com.example.musicapp.R
-import com.example.musicapp.adapter.AlbumAdapter
 import com.example.musicapp.adapter.ArtistAdapter
 import com.example.musicapp.databinding.FragmentArtistBinding
 import com.example.musicapp.model.Artist

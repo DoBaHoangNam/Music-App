@@ -9,7 +9,11 @@
         android:id="@+id/fragmentForYou"
         android:name="com.example.musicapp.fragment.FragmentForYou"
         android:label="fragment_for_you"
-        tools:layout="@layout/fragment_for_you" />
+        tools:layout="@layout/fragment_for_you" >
+        <action
+            android:id="@+id/action_fragmentForYou_to_fragmentAlbumSingle"
+            app:destination="@id/fragmentAlbumSingle" />
+    </fragment>
     <fragment
         android:id="@+id/fragmentSongs"
         android:name="com.example.musicapp.fragment.FragmentSongs"
@@ -19,7 +23,11 @@
         android:id="@+id/fragmentAlbum"
         android:name="com.example.musicapp.fragment.FragmentAlbum"
         android:label="fragment_album"
-        tools:layout="@layout/fragment_album" />
+        tools:layout="@layout/fragment_album" >
+        <action
+            android:id="@+id/action_fragmentAlbum_to_fragmentAlbumSingle"
+            app:destination="@id/fragmentAlbumSingle" />
+    </fragment>
     <fragment
         android:id="@+id/fragmentPlaylist"
         android:name="com.example.musicapp.fragment.FragmentPlaylist"
@@ -33,7 +41,11 @@
         android:id="@+id/fragmentArtist"
         android:name="com.example.musicapp.fragment.FragmentArtist"
         android:label="fragment_artist"
-        tools:layout="@layout/fragment_artist" />
+        tools:layout="@layout/fragment_artist" >
+        <action
+            android:id="@+id/action_fragmentArtist_to_fragmentArtistSingle"
+            app:destination="@id/fragmentArtistSingle" />
+    </fragment>
     <fragment
         android:id="@+id/fragmentPlaylistSpecific"
         android:name="com.example.musicapp.fragment.FragmentPlaylistSpecific"
@@ -42,5 +54,26 @@
         <action
             android:id="@+id/action_fragmentPlaylistSpecific_to_fragmentPlaylist"
             app:destination="@id/fragmentPlaylist" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentAlbumSingle"
+        android:name="com.example.musicapp.FragmentAlbumSingle"
+        android:label="fragment_album_single"
+        tools:layout="@layout/fragment_album_single" >
+        <action
+            android:id="@+id/action_fragmentAlbumSingle_to_fragmentAlbum"
+            app:destination="@id/fragmentAlbum" />
+        <action
+            android:id="@+id/action_fragmentAlbumSingle_to_fragmentForYou"
+            app:destination="@id/fragmentForYou" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentArtistSingle"
+        android:name="com.example.musicapp.FragmentArtistSingle"
+        android:label="fragment_artist_single"
+        tools:layout="@layout/fragment_artist_single" >
+        <action
+            android:id="@+id/action_fragmentArtistSingle_to_fragmentArtist"
+            app:destination="@id/fragmentArtist" />
     </fragment>
 </navigation>

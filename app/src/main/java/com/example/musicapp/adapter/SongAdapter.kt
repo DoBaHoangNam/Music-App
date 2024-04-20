@@ -35,6 +35,7 @@ class SongAdapter(private val items: MutableList<Song>) :
         holder.songName.text =  currentItem.songName
         holder.image.setImageResource(currentItem.image)
 
+
         if (selectedItemPosition == position) {
             holder.itemView.setBackgroundResource(R.color.white)
             holder.songPlayAnim.visibility = View.VISIBLE

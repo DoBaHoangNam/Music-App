@@ -6,18 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.Navigation.findNavController
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.musicapp.ActivitySearch
+import com.example.musicapp.ui.ActivitySearch
 import com.example.musicapp.R
 import com.example.musicapp.adapter.SongAdapter
-import com.example.musicapp.databinding.FragmentForYouBinding
 import com.example.musicapp.databinding.FragmentPlaylistSpecificBinding
 import com.example.musicapp.model.Song
 
 class FragmentPlaylistSpecific : Fragment() {
     private lateinit var binding: FragmentPlaylistSpecificBinding
+    private lateinit var fragmentManager: FragmentManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,14 +33,27 @@ class FragmentPlaylistSpecific : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentPlaylistSpecificBinding.inflate(inflater, container, false)
         displaySong()
+        fragmentManager = requireActivity().supportFragmentManager
         binding.btnBack.setOnClickListener {
-            findNavController().navigate(R.id.action_fragmentPlaylistSpecific_to_fragmentPlaylist)
+            fragmentManager.popBackStack()
+
         }
         binding.icSearch.setOnClickListener {
             val intent = Intent(requireContext(), ActivitySearch::class.java)
             startActivity(intent)
         }
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                fragmentManager.popBackStack()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     private fun displaySong() {

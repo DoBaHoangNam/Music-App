@@ -6,8 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.musicapp.ActivitySearch
+import com.example.musicapp.ui.ActivitySearch
 import com.example.musicapp.R
 import com.example.musicapp.adapter.AlbumAdapter
 import com.example.musicapp.databinding.FragmentForYouBinding
@@ -59,7 +60,7 @@ class FragmentForYou : Fragment() {
     private fun displayAlbum() {
         binding.recvSuggestion.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        val adapter = AlbumAdapter(getListAlbum())
+        val adapter = AlbumAdapter(getListAlbum(),findNavController())
         binding.recvSuggestion.adapter = adapter
     }
 

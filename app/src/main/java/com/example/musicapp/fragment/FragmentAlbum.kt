@@ -6,14 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.musicapp.ActivitySearch
+import androidx.navigation.fragment.findNavController
+import com.example.musicapp.ui.ActivitySearch
 
 import com.example.musicapp.R
 import com.example.musicapp.adapter.AlbumAdapter
-import com.example.musicapp.adapter.ArtistAdapter
 import com.example.musicapp.databinding.FragmentAlbumBinding
 import com.example.musicapp.model.Album
 import com.google.android.flexbox.AlignItems
@@ -47,7 +44,7 @@ class FragmentAlbum : Fragment() {
     }
 
     private fun displayAlbum() {
-        val adapter = AlbumAdapter(getListAlbum())
+        val adapter = AlbumAdapter(getListAlbum(),findNavController())
         binding.recvAlbum.adapter = adapter
         val layoutManager = FlexboxLayoutManager(context).apply {
             justifyContent = JustifyContent.SPACE_AROUND

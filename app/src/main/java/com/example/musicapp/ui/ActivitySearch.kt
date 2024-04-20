@@ -1,4 +1,4 @@
-package com.example.musicapp
+package com.example.musicapp.ui
 
 import android.content.Context
 import android.content.Intent
@@ -7,12 +7,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musicapp.OnRecentSearchItemClickListener
+import com.example.musicapp.R
+import com.example.musicapp.RecentSearchListener
 import com.example.musicapp.adapter.RecentSearchAdapter
 import com.example.musicapp.adapter.SongAdapter
 import com.example.musicapp.databinding.ActivitySearchBinding
 import com.example.musicapp.model.RecentSearch
 import com.example.musicapp.model.Song
-import com.example.musicapp.ui.MainActivity
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 
