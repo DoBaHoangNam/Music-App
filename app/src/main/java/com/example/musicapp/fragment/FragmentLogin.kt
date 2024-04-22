@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.findNavController
 import com.example.musicapp.R
 import com.example.musicapp.databinding.FragmentLoginBinding
@@ -37,6 +38,7 @@ class FragmentLogin : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var sharedPreferences: SharedPreferences
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +81,13 @@ class FragmentLogin : Fragment() {
         binding.btnSignInWithGoogle.setOnClickListener {
             val signIntent = googleSignInClient.signInIntent
             launcher.launch(signIntent)
+        }
+
+
+
+        binding.forgotPwdtv.setOnClickListener {
+            findNavController().navigate(R.id.action_fragmentLogin2_to_fragmentForgotPassword)
+
         }
 
 

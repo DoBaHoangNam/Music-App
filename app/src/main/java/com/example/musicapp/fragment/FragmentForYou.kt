@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musicapp.ActivitySettings
 import com.example.musicapp.ui.ActivitySearch
 import com.example.musicapp.R
 import com.example.musicapp.adapter.AlbumAdapter
@@ -52,6 +53,12 @@ class FragmentForYou : Fragment() {
             val intent = Intent(requireContext(), ActivitySearch::class.java)
             startActivity(intent)
         }
+
+        binding.icSetting.setOnClickListener {
+            val intent = Intent(requireContext(), ActivitySettings::class.java)
+            startActivity(intent)
+        }
+
         return binding.root
 
 

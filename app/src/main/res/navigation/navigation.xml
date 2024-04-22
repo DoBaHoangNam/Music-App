@@ -57,7 +57,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentAlbumSingle"
-        android:name="com.example.musicapp.FragmentAlbumSingle"
+        android:name="com.example.musicapp.fragment.FragmentAlbumSingle"
         android:label="fragment_album_single"
         tools:layout="@layout/fragment_album_single" >
         <action
@@ -69,7 +69,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentArtistSingle"
-        android:name="com.example.musicapp.FragmentArtistSingle"
+        android:name="com.example.musicapp.fragment.FragmentArtistSingle"
         android:label="fragment_artist_single"
         tools:layout="@layout/fragment_artist_single" >
         <action

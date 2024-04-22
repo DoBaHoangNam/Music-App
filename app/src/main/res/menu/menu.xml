@@ -19,4 +19,5 @@
         android:title="Playlists"
         android:id="@+id/fragmentPlaylist"
         android:icon="@drawable/playlist_icon" />
+
 </menu>

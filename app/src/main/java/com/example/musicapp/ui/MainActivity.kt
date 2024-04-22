@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.fragmentForYou, R.id.fragmentSongs, R.id.fragmentArtist, R.id.fragmentPlaylist, R.id.fragmentAlbum -> {
                     bottomNavigationView.visibility = View.VISIBLE
                 }
-                R.id.fragmentPlaylistSpecific, R.id.fragmentAlbumSingle -> {
+                R.id.fragmentPlaylistSpecific, R.id.fragmentAlbumSingle, R.id.fragmentArtistSingle -> {
                     //bottomNavigationView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_down))
                     bottomNavigationView.visibility = View.GONE
                 }

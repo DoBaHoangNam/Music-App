@@ -3,10 +3,16 @@ package com.example.musicapp.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.musicapp.ActivitySettings
 import com.example.musicapp.ui.ActivitySearch
 
 import com.example.musicapp.R
@@ -40,8 +46,31 @@ class FragmentAlbum : Fragment() {
             startActivity(intent)
         }
 
+        binding.icSetting.setOnClickListener {
+            val popupMenu = PopupMenu(requireContext(), binding.icSetting)
+
+            popupMenu.menuInflater.inflate(R.menu.option, popupMenu.menu)
+
+            popupMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.setting -> {
+                        val intent = Intent(requireContext(), ActivitySettings::class.java)
+                        startActivity(intent)
+                        true
+                    }
+                    R.id.edit -> {
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+            popupMenu.show()
+        }
+
         return binding.root
     }
+
 
     private fun displayAlbum() {
         val adapter = AlbumAdapter(getListAlbum(),findNavController())

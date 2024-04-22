@@ -1,4 +1,4 @@
-package com.example.musicapp
+package com.example.musicapp.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,22 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.musicapp.adapter.SongAdapter
+import com.example.musicapp.R
 import com.example.musicapp.adapter.SongInAlbumAdapter
 import com.example.musicapp.databinding.FragmentAlbumSingleBinding
-import com.example.musicapp.model.Song
 import com.example.musicapp.model.SongInAlbum
 import com.example.musicapp.ui.ActivitySearch
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-
 
 class FragmentAlbumSingle : Fragment() {
     private lateinit var binding: FragmentAlbumSingleBinding
@@ -82,12 +74,12 @@ class FragmentAlbumSingle : Fragment() {
 
     private fun getListSong(): MutableList<SongInAlbum> {
         val list = mutableListOf<SongInAlbum>()
-        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ","5:06"))
-        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ","5:06"))
-        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ","5:06"))
-        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ","5:06"))
-        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ","5:06"))
-        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ","5:06"))
+        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ", "5:06"))
+        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ", "5:06"))
+        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ", "5:06"))
+        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ", "5:06"))
+        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ", "5:06"))
+        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ", "5:06"))
         return list
 
     }
