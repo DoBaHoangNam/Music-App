@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_fragmentLogin2_to_fragmentSignUp"
             app:destination="@id/fragmentSignUp" />
+        <action
+            android:id="@+id/action_fragmentLogin2_to_fragmentForgotPassword"
+            app:destination="@id/fragmentForgotPassword" />
     </fragment>
     <fragment
         android:id="@+id/fragmentSignUp"
@@ -21,6 +24,15 @@
         tools:layout="@layout/fragment_sign_up" >
         <action
             android:id="@+id/action_fragmentSignUp_to_fragmentLogin2"
+            app:destination="@id/fragmentLogin2" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentForgotPassword"
+        android:name="com.example.musicapp.fragment.FragmentForgotPassword"
+        android:label="fragment_forgot_password"
+        tools:layout="@layout/fragment_forgot_password" >
+        <action
+            android:id="@+id/action_fragmentForgotPassword_to_fragmentLogin2"
             app:destination="@id/fragmentLogin2" />
     </fragment>
 </navigation>

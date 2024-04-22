@@ -6,10 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musicapp.ActivitySettings
 import com.example.musicapp.ui.ActivitySearch
 import com.example.musicapp.R
 import com.example.musicapp.adapter.SongAdapter
@@ -41,6 +43,28 @@ class FragmentPlaylistSpecific : Fragment() {
         binding.icSearch.setOnClickListener {
             val intent = Intent(requireContext(), ActivitySearch::class.java)
             startActivity(intent)
+        }
+
+        binding.icSetting.setOnClickListener {
+            val popupMenu = PopupMenu(requireContext(), binding.icSetting)
+
+            popupMenu.menuInflater.inflate(R.menu.option, popupMenu.menu)
+
+            popupMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.setting -> {
+                        val intent = Intent(requireContext(), ActivitySettings::class.java)
+                        startActivity(intent)
+                        true
+                    }
+                    R.id.edit -> {
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+            popupMenu.show()
         }
         return binding.root
     }

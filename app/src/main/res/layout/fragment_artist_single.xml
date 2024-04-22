@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".FragmentArtistSingle"
+    tools:context=".fragment.FragmentArtistSingle"
     android:background="@color/light_blue">
 
     <androidx.appcompat.widget.Toolbar
@@ -57,8 +57,8 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/albumImg"
-        android:layout_width="@dimen/definite_dimen_200"
-        android:layout_height="@dimen/definite_dimen_200"
+        android:layout_width="@dimen/definite_dimen_100"
+        android:layout_height="@dimen/definite_dimen_100"
         app:layout_constraintTop_toBottomOf="@+id/toolBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,29 +82,13 @@
         />
 
     <TextView
-        android:id="@+id/singerNameTv"
+        android:id="@+id/infoAlbumTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/albumNameTv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="ABC"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:textSize="@dimen/text_size_xsmall"
-        android:layout_marginTop="@dimen/definite_dimen_12"
-        />
-
-
-
-    <TextView
-        android:id="@+id/infoAlbumTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/singerNameTv"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="2018 | 20:36"
+        android:text="2 sóng | 20:36"
         android:textAlignment="center"
         android:textSize="@dimen/text_size_xsmall"
         android:layout_marginTop="@dimen/definite_dimen_12"

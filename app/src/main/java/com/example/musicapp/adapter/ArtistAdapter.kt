@@ -5,12 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicapp.R
 import com.example.musicapp.model.Album
 import com.example.musicapp.model.Artist
 
-class ArtistAdapter(private val items: MutableList<Artist>) :
+class ArtistAdapter(private val items: MutableList<Artist>,private val navController: NavController) :
     RecyclerView.Adapter<ArtistAdapter.ViewHolder>() {
 
 
@@ -28,6 +29,10 @@ class ArtistAdapter(private val items: MutableList<Artist>) :
         val currentItem = items[position]
         holder.singerName.text =  currentItem.name
         holder.image.setImageResource(currentItem.image)
+
+        holder.itemView.setOnClickListener {
+            navController.navigate(R.id.action_fragmentArtist_to_fragmentArtistSingle)
+        }
     }
 
     override fun getItemCount(): Int {
