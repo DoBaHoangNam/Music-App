@@ -58,7 +58,7 @@ class FragmentSignUp : Fragment() {
             password = binding.password.text.toString().trim()
             val checkbox = binding.confirmCheckbox.isChecked
             
-            if(email.isBlank() || password.isBlank() || checkbox){
+            if(email.isBlank() || password.isBlank() || checkbox==false){
                 Toast.makeText(requireContext(),"Please fill all details", Toast.LENGTH_SHORT).show()
                 
             }else{

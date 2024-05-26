@@ -1,12 +1,14 @@
 package com.example.musicapp.fragment
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.findNavController
@@ -21,6 +23,7 @@ import com.example.musicapp.model.Song
 class FragmentPlaylistSpecific : Fragment() {
     private lateinit var binding: FragmentPlaylistSpecificBinding
     private lateinit var fragmentManager: FragmentManager
+    private var mediaPlayer: MediaPlayer? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,23 +86,26 @@ class FragmentPlaylistSpecific : Fragment() {
     private fun displaySong() {
         binding.recvSongInPlayList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        val adapter = SongAdapter(getListSong())
+        val adapter = SongAdapter(requireContext(),getListSong()) { song ->
+            playSong(song)
+        }
         binding.recvSongInPlayList.adapter = adapter
+    }
+
+    private fun playSong(song: Song) {
+        // Release any previously playing media player
+        mediaPlayer?.release()
+        mediaPlayer = MediaPlayer().apply {
+            setDataSource(song.data)
+            prepare()
+            start()
+        }
+
+        Toast.makeText(requireContext(), "Playing: ${song.songName}", Toast.LENGTH_SHORT).show()
     }
 
     private fun getListSong(): MutableList<Song> {
         val list = mutableListOf<Song>()
-        list.add(Song("Tây Bắc Thả Chiều Vào Tranh ","Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Song("Tây Bắc Thả Chiều Vào Tranh ","Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Song("Tây Bắc Thả Chiều Vào Tranh ","Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Song("Tây Bắc Thả Chiều Vào Tranh ","Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Song("Tây Bắc Thả Chiều Vào Tranh ","Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Song("Tây Bắc Thả Chiều Vào Tranh ","Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Song("Tây Bắc Thả Chiều Vào Tranh ","Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Song("Tây Bắc Thả Chiều Vào Tranh ","Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Song("Tây Bắc Thả Chiều Vào Tranh ","Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Song("Tây Bắc Thả Chiều Vào Tranh ","Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Song("Tây Bắc Thả Chiều Vào Tranh ","Sèn Hoàng Mỹ Lam", R.drawable.img_song))
         return list
 
     }

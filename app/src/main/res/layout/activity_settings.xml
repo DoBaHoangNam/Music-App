@@ -58,19 +58,29 @@
             android:layout_marginTop="@dimen/definite_dimen_20">
 
             <LinearLayout
+                android:id="@+id/profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginBottom="@dimen/definite_dimen_20"
                 android:layout_marginStart="@dimen/definite_dimen_20"
                 android:layout_marginEnd="@dimen/definite_dimen_20"
-                android:background="@drawable/rounded_blue_button">
+                >
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_person_24"
-                    app:shapeAppearanceOverlay="@style/round"/>
+                <FrameLayout
+                    android:layout_width="@dimen/definite_dimen_60"
+                    android:layout_height="@dimen/definite_dimen_60"
+                    android:background="@drawable/img_profile">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_person_24"
+                        />
+
+                </FrameLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -83,7 +93,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Profile"
-                        android:textSize="@dimen/text_size_xxnormal"
+                        android:textSize="@dimen/text_size_xnormal"
                         android:textStyle="bold"
                         android:layout_marginStart="@dimen/definite_dimen_10"
                         />
@@ -92,7 +102,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Customize your profile"
-                        android:textSize="@dimen/text_size_normal"
+                        android:textSize="@dimen/text_size_small"
                         android:layout_marginStart="@dimen/definite_dimen_10"
                         />
                 </LinearLayout>
@@ -100,18 +110,28 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/audio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginBottom="@dimen/definite_dimen_20"
                 android:layout_marginStart="@dimen/definite_dimen_20"
                 android:layout_marginEnd="@dimen/definite_dimen_20"
-                android:background="@drawable/rounded_blue_button">
+                >
 
-                <ImageView
+                <FrameLayout
                     android:layout_width="@dimen/definite_dimen_60"
                     android:layout_height="@dimen/definite_dimen_60"
-                    android:src="@drawable/baseline_volume_up_24"/>
+                    android:background="@drawable/img_audio_setting">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_volume_up_24"
+                        />
+
+                </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -124,7 +144,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Audio"
-                        android:textSize="@dimen/text_size_xxnormal"
+                        android:textSize="@dimen/text_size_xnormal"
                         android:textStyle="bold"
                         android:layout_marginStart="@dimen/definite_dimen_10"
                         />
@@ -133,7 +153,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Change the sound settings"
-                        android:textSize="@dimen/text_size_normal"
+                        android:textSize="@dimen/text_size_small"
                         android:layout_marginStart="@dimen/definite_dimen_10"
                         />
                 </LinearLayout>
@@ -146,12 +166,22 @@
                 android:layout_marginBottom="@dimen/definite_dimen_20"
                 android:layout_marginStart="@dimen/definite_dimen_20"
                 android:layout_marginEnd="@dimen/definite_dimen_20"
-                android:background="@drawable/rounded_blue_button">
+                android:id="@+id/about"
+                >
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_info_24"/>
+                <FrameLayout
+                    android:layout_width="@dimen/definite_dimen_60"
+                    android:layout_height="@dimen/definite_dimen_60"
+                    android:background="@drawable/img_about_setting">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_info_24"
+                        />
+
+                </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -164,7 +194,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="About"
-                        android:textSize="@dimen/text_size_xxnormal"
+                        android:textSize="@dimen/text_size_xnormal"
                         android:textStyle="bold"
                         android:layout_marginStart="@dimen/definite_dimen_10"
                         />
@@ -173,9 +203,55 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Developer Information"
-                        android:textSize="@dimen/text_size_normal"
+                        android:textSize="@dimen/text_size_small"
                         android:layout_marginStart="@dimen/definite_dimen_10"
                         />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/definite_dimen_20"
+                android:layout_marginStart="@dimen/definite_dimen_20"
+                android:layout_marginEnd="@dimen/definite_dimen_20"
+                >
+
+                <FrameLayout
+                    android:layout_width="@dimen/definite_dimen_60"
+                    android:layout_height="@dimen/definite_dimen_60"
+                    android:background="@drawable/img_button">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_logout_24"
+                        />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    >
+                    <TextView
+                        android:id="@+id/tvLogout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Log out"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/text_size_xnormal"
+                        android:textStyle="bold"
+                        android:layout_marginStart="@dimen/definite_dimen_10"
+                        />
+
                 </LinearLayout>
 
             </LinearLayout>

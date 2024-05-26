@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivityAudio"
+    android:orientation="vertical"
+    android:background="@color/light_blue">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnBack"
+            android:layout_width="@dimen/definite_dimen_60"
+            android:layout_height="@dimen/definite_dimen_60"
+            android:layout_marginStart="@dimen/definite_dimen_8"
+            android:layout_marginTop="@dimen/definite_dimen_10"
+            android:background="@drawable/back_btn"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ellipsize="end"
+            android:fontFamily="@font/sofia_pro_bold"
+            android:maxLines="1"
+            android:text="Audio"
+            android:textSize="@dimen/text_size_xxnormal" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile"
+        android:layout_marginTop="@dimen/definite_dimen_20">
+
+        <LinearLayout
+            android:id="@+id/resetPwd"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/definite_dimen_20"
+            android:orientation="vertical"
+            >
+
+
+            <LinearLayout
+                android:id="@+id/reduceVolume"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/definite_dimen_20"
+                android:layout_marginBottom="@dimen/definite_dimen_10"
+                android:orientation="horizontal"
+                android:weightSum="8">
+
+                <FrameLayout
+                    android:layout_width="@dimen/definite_dimen_60"
+                    android:layout_height="@dimen/definite_dimen_60"
+                    android:background="@drawable/img_button"
+                    android:layout_weight="1">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_volume_up_24" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_weight="4">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/definite_dimen_10"
+                        android:text="Reduce volume"
+                        android:textSize="@dimen/text_size_xnormal"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/definite_dimen_10"
+                        android:text="Lower the volume when a system is\nplayed or a notification is recieived"
+                        android:textSize="@dimen/text_size_small" />
+                </LinearLayout>
+
+                <Switch
+                    android:id="@+id/swReduceVolume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/definite_dimen_10"
+                    android:layout_marginEnd="@dimen/definite_dimen_10"
+                    android:layout_weight="2"
+                     />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/changePitch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/definite_dimen_20"
+                android:layout_marginBottom="@dimen/definite_dimen_10"
+                android:orientation="horizontal"
+                android:weightSum="8">
+
+                <FrameLayout
+                    android:layout_width="@dimen/definite_dimen_60"
+                    android:layout_height="@dimen/definite_dimen_60"
+                    android:background="@drawable/img_button"
+                   >
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_mic_24" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_weight="7">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/definite_dimen_10"
+                        android:text="Change pitch"
+                        android:textSize="@dimen/text_size_xnormal"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/definite_dimen_10"
+                        android:text="Change pitch of the song to make it higher or lower"
+                        android:textSize="@dimen/text_size_small" />
+
+                    <SeekBar
+                        android:id="@+id/changePitchSeekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:max="13"
+                        android:progress="7"
+
+                        />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/changeSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/definite_dimen_20"
+                android:layout_marginBottom="@dimen/definite_dimen_10"
+                android:orientation="horizontal"
+                android:weightSum="8">
+
+                <FrameLayout
+                    android:layout_width="@dimen/definite_dimen_60"
+                    android:layout_height="@dimen/definite_dimen_60"
+                    android:background="@drawable/img_button"
+                    >
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_speed_24" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_weight="7">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/definite_dimen_10"
+                        android:text="Play speed"
+                        android:textSize="@dimen/text_size_xnormal"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/definite_dimen_10"
+                        android:text="Change pitch of the song to make it higher or lower"
+                        android:textSize="@dimen/text_size_small" />
+
+                    <SeekBar
+                        android:id="@+id/changeSpeedSeekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:max="16"
+                        android:progress="6"
+
+                        />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

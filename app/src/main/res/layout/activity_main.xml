@@ -68,6 +68,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/imgSongPlaying"
                     android:layout_width="@dimen/definite_dimen_40"
                     android:layout_height="@dimen/definite_dimen_40"
                     android:src="@drawable/img_song"
@@ -97,6 +98,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tvSingerOfSongPlaying"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/definite_dimen_2"
@@ -113,6 +115,7 @@
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/icBack"
                         android:layout_width="@dimen/definite_dimen_30"
                         android:layout_height="@dimen/definite_dimen_30"
                         android:background="@drawable/baseline_skip_previous_24"
@@ -126,6 +129,7 @@
                         android:background="@drawable/baseline_play_arrow_24" />
 
                     <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/icNext"
                         android:layout_width="@dimen/definite_dimen_30"
                         android:layout_height="@dimen/definite_dimen_30"
                         android:background="@drawable/baseline_skip_next_24" />
@@ -311,7 +315,7 @@
                     android:layout_marginStart="@dimen/definite_dimen_40"
                     android:layout_marginEnd="@dimen/definite_dimen_40"
                     android:max="100"
-                    android:progress="50"
+                    android:progress="0"
                     app:layout_constraintBottom_toTopOf="@id/timing"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -373,6 +377,7 @@
                         android:background="@drawable/baseline_shuffle_24" />
 
                     <ImageView
+                        android:id="@+id/backBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -387,6 +392,7 @@
                         android:background="@drawable/baseline_play_arrow_24" />
 
                     <TextView
+                        android:id="@+id/nextBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
