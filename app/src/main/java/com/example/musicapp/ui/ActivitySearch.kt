@@ -3,12 +3,13 @@ package com.example.musicapp.ui
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicapp.OnRecentSearchItemClickListener
-import com.example.musicapp.R
 import com.example.musicapp.RecentSearchListener
 import com.example.musicapp.adapter.RecentSearchAdapter
 import com.example.musicapp.adapter.SongAdapter
@@ -23,12 +24,13 @@ class ActivitySearch : AppCompatActivity(), OnRecentSearchItemClickListener {
     private lateinit var binding: ActivitySearchBinding
     private lateinit var adapter: SongAdapter
     private lateinit var adapter2: RecentSearchAdapter
-    private lateinit var originalMenuFood: MutableList<Song>
-    private val filterMenuFood = mutableListOf<Song>()
+    private lateinit var originaListSong: MutableList<Song>
+    private val filterListSong = mutableListOf<Song>()
     private val recentSearch = mutableListOf<RecentSearch>()
     private val PREF_NAME = "MyPrefs"
     private val KEY_RECENT_SEARCH = "recent_search"
     private lateinit var sharedPreferences: SharedPreferences
+    private var mediaPlayer: MediaPlayer? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,9 +44,11 @@ class ActivitySearch : AppCompatActivity(), OnRecentSearchItemClickListener {
 
         binding.recvSearchList.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        adapter = SongAdapter(filterMenuFood)
+        adapter = SongAdapter(this,filterListSong){ song ->
+            playSong(song)
+        }
         binding.recvSearchList.adapter = adapter
-        originalMenuFood = getListSong()
+        originaListSong = getListSong()
         setupSearchView()
         showRecent()
 
@@ -98,7 +102,7 @@ class ActivitySearch : AppCompatActivity(), OnRecentSearchItemClickListener {
         binding.searchEdt.setOnQueryTextListener(object :
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                filterMenuItems(query)
+                filterSongItems(query)
                 addToRecentSearchIfNotExist(query.trim())
                 adapter2.notifyDataSetChanged()
                 saveRecentSearchToSharedPreferences(recentSearch)
@@ -109,7 +113,7 @@ class ActivitySearch : AppCompatActivity(), OnRecentSearchItemClickListener {
             }
 
             override fun onQueryTextChange(query: String): Boolean {
-                filterMenuItems(query)
+                filterSongItems(query)
                 binding.headingOfRecTV.text = "Tracks"
 
                 if(query.isEmpty()){
@@ -123,19 +127,19 @@ class ActivitySearch : AppCompatActivity(), OnRecentSearchItemClickListener {
 
 
 
-    private fun filterMenuItems(query: String) {
+    private fun filterSongItems(query: String) {
         binding.recvRecentList.visibility = View.INVISIBLE
         binding.recvSearchList.visibility = View.VISIBLE
 
-        filterMenuFood.clear()
+        filterListSong.clear()
 
-        originalMenuFood.forEach { item ->
+        originaListSong.forEach { item ->
             if (item.songName?.contains(
                     query,
                     ignoreCase = true
                 ) == true || item.singerName?.contains(query, ignoreCase = true) == true
             ) {
-                filterMenuFood.add(item)
+                filterListSong.add(item)
             }
         }
 
@@ -145,10 +149,10 @@ class ActivitySearch : AppCompatActivity(), OnRecentSearchItemClickListener {
     private fun showAllMenu() {
 //        database = FirebaseDatabase.getInstance()
 //        val foodRef: DatabaseReference = database.reference.child("menu")
-        originalMenuFood = getListSong()
+        originaListSong = getListSong()
 
-        filterMenuFood.clear()
-        filterMenuFood.addAll(originalMenuFood)
+        filterListSong.clear()
+        filterListSong.addAll(originaListSong)
         adapter.notifyDataSetChanged()
 
 //        foodRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -170,21 +174,21 @@ class ActivitySearch : AppCompatActivity(), OnRecentSearchItemClickListener {
 
     }
 
+    private fun playSong(song: Song) {
+        // Release any previously playing media player
+        mediaPlayer?.release()
+        mediaPlayer = MediaPlayer().apply {
+            setDataSource(song.data)
+            prepare()
+            start()
+        }
+
+        Toast.makeText(this, "Playing: ${song.songName}", Toast.LENGTH_SHORT).show()
+    }
+
 
     private fun getListSong(): MutableList<Song> {
         val list = mutableListOf<Song>()
-        list.add(Song("Tây Bắc Thả Chiều Vào Tranh ", "Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(
-            Song(
-                "Tây Bắc Yêu thương ",
-                "Sèn Hoàng Mỹ Lam - Nguyễn Thu Hằng",
-                R.drawable.img_song
-            )
-        )
-        list.add(Song("Chắc ai đó sẽ về", "Sơn Trung MPT", R.drawable.img_song))
-        list.add(Song("Panis Angelicus", "franck", R.drawable.img_song))
-        list.add(Song("Có Ai Thương Em Như Anh", "Tóc Tiên", R.drawable.img_song))
-        list.add(Song("Tàu Anh Qua Nui", "Anh Thơ", R.drawable.img_song))
         return list
 
     }

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivityAbout"
+    android:background="@color/light_blue"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnBack"
+            android:layout_width="@dimen/definite_dimen_60"
+            android:layout_height="@dimen/definite_dimen_60"
+            android:layout_marginStart="@dimen/definite_dimen_8"
+            android:layout_marginTop="@dimen/definite_dimen_10"
+            android:background="@drawable/back_btn"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvResetPwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ellipsize="end"
+            android:fontFamily="@font/sofia_pro_bold"
+            android:maxLines="1"
+            android:text="About"
+            android:textSize="@dimen/text_size_xxnormal" />
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Music Dreamee"
+        android:textSize="@dimen/text_size_huge"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:layout_marginTop="@dimen/definite_dimen_20"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Version 1.0.0"
+        android:textSize="@dimen/text_size_normal"
+        android:textStyle="normal"
+        android:textAlignment="center"
+        android:layout_marginTop="@dimen/definite_dimen_20"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="The lastest version is already installed"
+        android:textSize="@dimen/text_size_normal"
+        android:textStyle="normal"
+        android:textAlignment="center"
+        android:layout_marginTop="@dimen/definite_dimen_20"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnTerms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sign_in_btn"
+        android:text="Terms and Condition"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="@dimen/definite_dimen_4"
+        android:layout_marginTop="@dimen/definite_dimen_40"
+        app:layout_constraintTop_toBottomOf="@id/cfNewPwdTi"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnLicenses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sign_in_btn"
+        android:text="Open source licenses"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="@dimen/definite_dimen_4"
+        app:layout_constraintTop_toBottomOf="@id/cfNewPwdTi"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+
+</LinearLayout>

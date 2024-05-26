@@ -13,9 +13,14 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="circle1">
+        <item name="cornerSize">60%</item>
+    </style>
+
     <style name="round">
         <item name="cornerSize">20%</item>
     </style>
+
 
 
 

@@ -1,17 +1,18 @@
 package com.example.musicapp.fragment
 
 import android.app.Activity
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.findNavController
 import com.example.musicapp.R
 import com.example.musicapp.databinding.FragmentLoginBinding
@@ -26,7 +27,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
 class FragmentLogin : Fragment() {
@@ -74,7 +79,7 @@ class FragmentLogin : Fragment() {
                 Toast.makeText(requireContext(), "Please fill all details", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                createUserAccount(email, password)
+                login(email, password)
             }
         }
 
@@ -99,7 +104,7 @@ class FragmentLogin : Fragment() {
         return true // hoặc false tùy vào xử lý của bạn
     }
 
-    private fun createUserAccount(email: String, password: String) {
+    private fun login(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val user = auth.currentUser
@@ -107,6 +112,38 @@ class FragmentLogin : Fragment() {
                 val editor = sharedPreferences.edit()
                 editor.putBoolean("logged_in", true)
                 editor.apply()
+
+                val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+                if (userId != null) {
+                    val databaseReference = FirebaseDatabase.getInstance().getReference("user").child(userId)
+                    databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                // Người dùng đã tồn tại trong Realtime Database
+                                val user = dataSnapshot.getValue(User::class.java)
+
+
+                                if (user != null && user.password != password) {
+                                    // Mật khẩu khác nhau, cập nhật mật khẩu mới vào Realtime Database
+                                    user.password = password
+                                    databaseReference.setValue(user)
+                                        .addOnSuccessListener {
+                                            Log.d("aaaaaaaa", "Password updated in Realtime Database.")
+                                        }
+                                        .addOnFailureListener { e ->
+                                            Log.e("aaaaaaaa", "Failed to update password in Realtime Database: $e")
+                                        }
+                                }
+                            }
+                        }
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            // Xử lý khi có lỗi xảy ra
+                        }
+                    })
+                }
+
+
                 updateUi(user)
             } else {
                 Toast.makeText(requireContext(), "Authentication failed", Toast.LENGTH_SHORT).show()
