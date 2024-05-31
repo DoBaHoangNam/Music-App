@@ -15,6 +15,7 @@ import com.example.musicapp.R
 import com.example.musicapp.databinding.FragmentSignUpBinding
 import com.example.musicapp.model.User
 import com.example.musicapp.ui.ActivityLoginSignin
+import com.example.musicapp.ui.ActivitySplashScreen
 import com.example.musicapp.ui.MainActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -89,7 +90,7 @@ class FragmentSignUp : Fragment() {
             if(task.isSuccessful){
                 Toast.makeText(requireContext(),"Account created successfully", Toast.LENGTH_SHORT).show()
                 saveUserData()
-                val intent = Intent(requireContext(), MainActivity::class.java)
+                val intent = Intent(requireContext(), ActivitySplashScreen::class.java)
                 startActivity(intent)
             }else{
                 Toast.makeText(requireContext(), "Account Creation Failed", Toast.LENGTH_SHORT).show()
@@ -141,7 +142,7 @@ class FragmentSignUp : Fragment() {
 
     private fun updateUi(user: FirebaseUser?) {
 
-        val intent = Intent(requireContext(), MainActivity::class.java)
+        val intent = Intent(requireContext(), ActivitySplashScreen::class.java)
         startActivity(intent)
         activity?.finish()
 

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicapp.R
 import com.example.musicapp.adapter.SongInAlbumAdapter
 import com.example.musicapp.databinding.FragmentArtistSingleBinding
+import com.example.musicapp.model.Song
 import com.example.musicapp.model.SongInAlbum
 import com.example.musicapp.ui.ActivitySearch
 
@@ -72,14 +73,8 @@ class FragmentArtistSingle : Fragment() {
         binding.recvSongs.adapter = adapter
     }
 
-    private fun getListSong(): MutableList<SongInAlbum> {
-        val list = mutableListOf<SongInAlbum>()
-        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ", "5:06"))
-        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ", "5:06"))
-        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ", "5:06"))
-        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ", "5:06"))
-        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ", "5:06"))
-        list.add(SongInAlbum("Tây Bắc Thả Chiều Vào Tranh ", "5:06"))
+    private fun getListSong(): MutableList<Song> {
+        val list = mutableListOf<Song>()
         return list
 
     }

@@ -1,18 +1,21 @@
 package com.example.musicapp.ui
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musicapp.MediaPlayerControl
 import com.example.musicapp.OnRecentSearchItemClickListener
 import com.example.musicapp.RecentSearchListener
+import com.example.musicapp.SongViewModel
 import com.example.musicapp.adapter.RecentSearchAdapter
-import com.example.musicapp.adapter.SongAdapter
+import com.example.musicapp.adapter.SongSearchAdapter
 import com.example.musicapp.databinding.ActivitySearchBinding
 import com.example.musicapp.model.RecentSearch
 import com.example.musicapp.model.Song
@@ -22,15 +25,15 @@ import com.google.gson.Gson
 class ActivitySearch : AppCompatActivity(), OnRecentSearchItemClickListener {
 
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var adapter: SongAdapter
+    private lateinit var adapter: SongSearchAdapter
     private lateinit var adapter2: RecentSearchAdapter
-    private lateinit var originaListSong: MutableList<Song>
+    private lateinit var originalListSong: MutableList<Song>
     private val filterListSong = mutableListOf<Song>()
     private val recentSearch = mutableListOf<RecentSearch>()
     private val PREF_NAME = "MyPrefs"
     private val KEY_RECENT_SEARCH = "recent_search"
+    private val KEY_SELECTED_SONG = "selected_song"
     private lateinit var sharedPreferences: SharedPreferences
-    private var mediaPlayer: MediaPlayer? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,18 +47,26 @@ class ActivitySearch : AppCompatActivity(), OnRecentSearchItemClickListener {
 
         binding.recvSearchList.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        adapter = SongAdapter(this,filterListSong){ song ->
+        adapter = SongSearchAdapter(this, filterListSong) { song ->
             playSong(song)
         }
         binding.recvSearchList.adapter = adapter
-        originaListSong = getListSong()
+
+        val songListFromIntent = intent.getParcelableArrayListExtra<Song>("song_list")
+        Log.d("check_source", songListFromIntent?.size.toString() + " songList from intent")
+
+        originalListSong = songListFromIntent?.toMutableList() ?: mutableListOf()
+
+        // Log the size of the originalListSong to check if it was retrieved correctly
+        Log.d("check_source", originalListSong.size.toString() + " originalListSongSearch")
+
+
+
         setupSearchView()
         showRecent()
 
 
         binding.btnBack.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
             finish()
         }
     }
@@ -106,7 +117,7 @@ class ActivitySearch : AppCompatActivity(), OnRecentSearchItemClickListener {
                 addToRecentSearchIfNotExist(query.trim())
                 adapter2.notifyDataSetChanged()
                 saveRecentSearchToSharedPreferences(recentSearch)
-                if(query.isEmpty()){
+                if (query.isEmpty()) {
                     showRecent()
                 }
                 return true
@@ -116,7 +127,7 @@ class ActivitySearch : AppCompatActivity(), OnRecentSearchItemClickListener {
                 filterSongItems(query)
                 binding.headingOfRecTV.text = "Tracks"
 
-                if(query.isEmpty()){
+                if (query.isEmpty()) {
                     showRecent()
                 }
                 return true
@@ -125,15 +136,13 @@ class ActivitySearch : AppCompatActivity(), OnRecentSearchItemClickListener {
     }
 
 
-
-
     private fun filterSongItems(query: String) {
         binding.recvRecentList.visibility = View.INVISIBLE
         binding.recvSearchList.visibility = View.VISIBLE
 
         filterListSong.clear()
 
-        originaListSong.forEach { item ->
+        originalListSong.forEach { item ->
             if (item.songName?.contains(
                     query,
                     ignoreCase = true
@@ -146,54 +155,20 @@ class ActivitySearch : AppCompatActivity(), OnRecentSearchItemClickListener {
         adapter.notifyDataSetChanged()
     }
 
-    private fun showAllMenu() {
-//        database = FirebaseDatabase.getInstance()
-//        val foodRef: DatabaseReference = database.reference.child("menu")
-        originaListSong = getListSong()
-
-        filterListSong.clear()
-        filterListSong.addAll(originaListSong)
-        adapter.notifyDataSetChanged()
-
-//        foodRef.addListenerForSingleValueEvent(object : ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                for(foodSnapshot in snapshot.children){
-//                    val menuItem  = foodSnapshot.getValue(Item::class.java)
-//                    menuItem?.let { originalMenuFood.add(it) }
-//                }
-//                filterMenuFood.clear()
-//                filterMenuFood.addAll(originalMenuFood)
-//                adapter.notifyDataSetChanged()
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                Log.d("DatabaseError", "Error: ${error.message}")
-//            }
-//        })
-
-
-    }
 
     private fun playSong(song: Song) {
-        // Release any previously playing media player
-        mediaPlayer?.release()
-        mediaPlayer = MediaPlayer().apply {
-            setDataSource(song.data)
-            prepare()
-            start()
-        }
-
-        Toast.makeText(this, "Playing: ${song.songName}", Toast.LENGTH_SHORT).show()
+        saveSelectedSongToSharedPreferences(song.songName)
+        finish()
     }
 
-
-    private fun getListSong(): MutableList<Song> {
-        val list = mutableListOf<Song>()
-        return list
-
+    private fun saveSelectedSongToSharedPreferences(songName: String) {
+        val editor = sharedPreferences.edit()
+        editor.putString(KEY_SELECTED_SONG, songName)
+        editor.apply()
     }
+
 
     override fun onItemClick(searchContent: String) {
-        binding.searchEdt.setQuery(searchContent,true)
+        binding.searchEdt.setQuery(searchContent, true)
     }
 }

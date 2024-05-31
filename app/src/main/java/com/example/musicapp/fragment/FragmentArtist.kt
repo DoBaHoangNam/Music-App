@@ -1,19 +1,25 @@
 package com.example.musicapp.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.musicapp.ActivitySettings
+import com.example.musicapp.ui.ActivitySettings
+import com.example.musicapp.MediaPlayerControl
 import com.example.musicapp.ui.ActivitySearch
 import com.example.musicapp.R
+import com.example.musicapp.SongViewModel
 import com.example.musicapp.adapter.ArtistAdapter
 import com.example.musicapp.databinding.FragmentArtistBinding
 import com.example.musicapp.model.Artist
+import com.example.musicapp.model.Song
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
@@ -23,9 +29,32 @@ import com.google.android.flexbox.JustifyContent
 
 class FragmentArtist : Fragment() {
     private lateinit var binding: FragmentArtistBinding
+    private var mediaPlayerControl: MediaPlayerControl? = null
+    private var artistList: MutableList<Artist> = mutableListOf()
+    private val songViewModel: SongViewModel by activityViewModels()
+    private var songs: MutableList<Song> = mutableListOf()
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is MediaPlayerControl) {
+            mediaPlayerControl = context
+        } else {
+            throw RuntimeException("$context must implement MediaPlayerControl")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        mediaPlayerControl = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        arguments?.let {
+            artistList = it.getParcelableArrayList<Artist>("artist_list")?.toMutableList()
+                ?: mutableListOf()
+        }
 
     }
 
@@ -34,9 +63,18 @@ class FragmentArtist : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentArtistBinding.inflate(inflater, container, false)
-        displayAlbum()
+
+        songViewModel.artistList.observe(viewLifecycleOwner) { artistList ->
+            displayAlbum(artistList)
+        }
+
         binding.icSearch.setOnClickListener {
-            val intent = Intent(requireContext(), ActivitySearch::class.java)
+            songViewModel.songList.observe(viewLifecycleOwner) { songList ->
+                songs = songList
+            }
+            val intent = Intent(requireContext(), ActivitySearch::class.java).apply {
+                putParcelableArrayListExtra("song_list", ArrayList(songs))
+            }
             startActivity(intent)
         }
 
@@ -65,10 +103,10 @@ class FragmentArtist : Fragment() {
         return binding.root
     }
 
-    private fun displayAlbum() {
+    private fun displayAlbum(artistList: MutableList<Artist>) {
 //        binding.recvArtist.layoutManager =
 //            GridLayoutManager(requireContext(),3)
-        val adapter = ArtistAdapter(getListArtist(), findNavController())
+        val adapter = ArtistAdapter(artistList, findNavController())
         binding.recvArtist.adapter = adapter
         val layoutManager = FlexboxLayoutManager(context).apply {
             justifyContent = JustifyContent.SPACE_BETWEEN
@@ -79,33 +117,9 @@ class FragmentArtist : Fragment() {
         }
 
         binding.recvArtist.layoutManager = layoutManager
-//            GridLayoutManager(requireContext(),3)
-//        val adapter = ArtistAdapter(getListArtist())
+        Log.d("check_source", artistList.size.toString() + "artist3")
     }
 
-    private fun getListArtist(): MutableList<Artist> {
-        val list = mutableListOf<Artist>()
-        list.add(Artist("Sơn Tung MTP", R.drawable.album_image))
-        list.add(Artist("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Artist("Sơn Tung MTP", R.drawable.album_image))
-        list.add(Artist("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Artist("Sơn Tung MTP", R.drawable.album_image))
-        list.add(Artist("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Artist("Sơn Tung MTP", R.drawable.album_image))
-        list.add(Artist("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Artist("Sơn Tung MTP", R.drawable.album_image))
-        list.add(Artist("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Artist("Sơn Tung MTP", R.drawable.album_image))
-        list.add(Artist("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Artist("Sơn Tung MTP", R.drawable.album_image))
-        list.add(Artist("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Artist("Sơn Tung MTP", R.drawable.album_image))
-        list.add(Artist("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-
-
-        return list
-
-    }
 
 
 }

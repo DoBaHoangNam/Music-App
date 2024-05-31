@@ -1,7 +1,9 @@
 package com.example.musicapp.ui
 
-import com.example.musicapp.SongViewModel
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -15,12 +17,16 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.example.musicapp.MediaPlayerControl
 import com.example.musicapp.R
+import com.example.musicapp.SongViewModel
 import com.example.musicapp.databinding.ActivityMainBinding
+import com.example.musicapp.model.Album
+import com.example.musicapp.model.Artist
 import com.example.musicapp.model.Song
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -40,7 +46,12 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var updateTimeRunnable: Runnable
     private lateinit var songList: MutableList<Song>
+    private lateinit var albumList: MutableList<Album>
+    private lateinit var artistList: MutableList<Artist>
     private val songViewModel: SongViewModel by viewModels()
+    private lateinit var sharedPreferences: SharedPreferences
+    private val PREF_NAME = "MyPrefs"
+    private val KEY_SELECTED_SONG = "selected_song"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +61,15 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
 
         songList = intent.getParcelableArrayListExtra<Song>("song_list")?.toMutableList()
             ?: mutableListOf()
+        albumList = intent.getParcelableArrayListExtra<Album>("album_list")?.toMutableList()
+            ?: mutableListOf()
+        artistList = intent.getParcelableArrayListExtra<Artist>("artist_list")?.toMutableList()
+            ?: mutableListOf()
+
+        Log.d("check_source", albumList.size.toString() + " album2")
+        Log.d("check_source", songList.size.toString() + " song2")
+        Log.d("check_source", artistList.size.toString() + " artist2")
+
 
         loadFragment()
 
@@ -222,6 +242,7 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
     }
 
 
+
     fun showBottomSheet(songTitle: String, artistName: String, duration: String, imageUrl: String) {
         binding.tvSongName.text = songTitle
         binding.tvSingerName.text = artistName
@@ -250,10 +271,9 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
 
     private fun updateCurrentTime() {
         mediaPlayer?.let {
-            val currentTime = it.currentPosition
-            binding.startTimeTv.text = formatDuration(currentTime.toLong())
-            val progress = (currentTime / 1000).toInt()
-            binding.seekBar.progress = progress
+            val currentPosition = it.currentPosition / 1000 // Get the current position in seconds
+            binding.seekBar.progress = currentPosition
+            binding.startTimeTv.text = formatDuration(currentPosition.toLong() * 1000)
         }
     }
 
@@ -276,6 +296,9 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
         }
     }
 
+
+
+
     override fun playSong(song: Song) {
         mediaPlayer?.release()
         mediaPlayer = MediaPlayer().apply {
@@ -288,6 +311,7 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
         binding.playBtn.setBackgroundResource(R.drawable.baseline_pause_24)
 
         showBottomSheet(song.songName, song.singerName, song.duration.toString(), song.image ?: "")
+        handler.post(updateTimeRunnable)
 
         updateTimeRunnable = object : Runnable {
             override fun run() {
@@ -350,7 +374,12 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
         songList = intent.getParcelableArrayListExtra<Song>("song_list")?.toMutableList()
             ?: mutableListOf()
 
+        albumList = intent.getParcelableArrayListExtra<Album>("album_list")?.toMutableList()
+            ?: mutableListOf()
+
         songViewModel.songList.value = songList
+        songViewModel.albumList.value = albumList
+        songViewModel.artistList.value = artistList
 
 
     }
@@ -361,14 +390,14 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
     }
 
     private fun saveCurrentSongIndex() {
-        val sharedPreferences = getSharedPreferences("MusicAppPreferences", Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putInt("currentSongIndex", currentSongIndex)
         editor.apply()
     }
 
     private fun restoreCurrentSongIndex() {
-        val sharedPreferences = getSharedPreferences("MusicAppPreferences", Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         currentSongIndex = sharedPreferences.getInt("currentSongIndex", 0)
         // Play the last played song
         updateBottomSheetWhenStart(
@@ -379,7 +408,7 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
         )
     }
 
-    fun updateBottomSheetWhenStart(
+    private fun updateBottomSheetWhenStart(
         songTitle: String,
         artistName: String,
         duration: String,
@@ -409,6 +438,7 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
         Log.d("check_song", currentSongIndex.toString())
 
     }
+
     override fun onBackPressed() {
         val layout = findViewById<SlidingUpPanelLayout>(R.id.slidingUp)
         if (layout.panelState == SlidingUpPanelLayout.PanelState.EXPANDED) {
@@ -420,5 +450,32 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
         }
 
     }
+
+    override fun onResume() {
+        super.onResume()
+        playSelectedSongIfAvailable()
+    }
+
+    private fun playSelectedSongIfAvailable() {
+        sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        val selectedSongName = sharedPreferences.getString(KEY_SELECTED_SONG, null)
+        selectedSongName?.let { songName ->
+            val song = songList.find { it.songName == songName }
+            song?.let {
+                playSong(it)
+                saveCurrentSongIndex()
+                Log.d("check_source", it.songName + " song")
+                clearSelectedSongFromSharedPreferences()  // Clear the stored song name after playing
+            }
+        }
+    }
+
+    private fun clearSelectedSongFromSharedPreferences() {
+        val editor = sharedPreferences.edit()
+        editor.remove(KEY_SELECTED_SONG)
+        editor.apply()
+    }
+
+
 }
 

@@ -10,10 +10,11 @@ import com.example.musicapp.OnRecentSearchItemClickListener
 import com.example.musicapp.R
 import com.example.musicapp.RecentSearchListener
 import com.example.musicapp.model.RecentSearch
+import com.example.musicapp.model.Song
 import com.example.musicapp.model.SongInAlbum
 
 class SongInAlbumAdapter(
-    private val items: MutableList<SongInAlbum>,
+    private val items: MutableList<Song>,
 ) :
     RecyclerView.Adapter<SongInAlbumAdapter.ViewHolder>() {
     private var selectedItemPosition: Int = RecyclerView.NO_POSITION
@@ -39,7 +40,7 @@ class SongInAlbumAdapter(
         val currentItem = items[position]
         holder.songName.text = currentItem.songName
         holder.number.text = (position + 1).toString()
-        holder.length.text = currentItem.length
+        holder.length.text = formatDuration(currentItem.duration)
 
         if (selectedItemPosition == position) {
             holder.itemView.setBackgroundResource(R.color.white)
@@ -68,6 +69,12 @@ class SongInAlbumAdapter(
     fun setSelectedItem(position: Int) {
         selectedItemPosition = position
         notifyDataSetChanged() // Cập nhật lại RecyclerView để vẽ lại giao diện
+    }
+
+    fun formatDuration(duration: Long): String {
+        val minutes = (duration / 1000) / 60
+        val seconds = (duration / 1000) % 60
+        return String.format("%02d:%02d", minutes, seconds)
     }
 
 }
