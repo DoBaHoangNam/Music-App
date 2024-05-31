@@ -1,19 +1,19 @@
-package com.example.musicapp
+package com.example.musicapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.musicapp.databinding.ActivityResetPasswordBinding
+import com.example.musicapp.databinding.ActivityEditProfileBinding
 
-class ActivityResetPassword : AppCompatActivity() {
-    private lateinit var binding: ActivityResetPasswordBinding
+class ActivityEditProfile : AppCompatActivity() {
+    private lateinit var binding: ActivityEditProfileBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityResetPasswordBinding.inflate(layoutInflater)
+        binding = ActivityEditProfileBinding.inflate(layoutInflater)
 
         binding.btnBack.setOnClickListener {
             finish()
         }
+
         binding.btnUpdate.setOnClickListener {
             finish()
         }

@@ -1,4 +1,4 @@
-package com.example.musicapp
+package com.example.musicapp.ui
 
 import android.content.Context
 import android.content.Intent
@@ -6,8 +6,6 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.musicapp.databinding.ActivitySettingsBinding
-import com.example.musicapp.ui.ActivityLoginSignin
-import com.example.musicapp.ui.MainActivity
 
 class ActivitySettings : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding

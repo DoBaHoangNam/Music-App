@@ -7,18 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.musicapp.ActivitySettings
+import com.example.musicapp.ui.ActivitySettings
 import com.example.musicapp.R
+import com.example.musicapp.SongViewModel
 import com.example.musicapp.ui.ActivitySearch
 import com.example.musicapp.adapter.PlaylistAdapter
 import com.example.musicapp.databinding.FragmentPlaylistBinding
 import com.example.musicapp.model.Playlist
+import com.example.musicapp.model.Song
 
 
 class FragmentPlaylist : Fragment() {
     private lateinit var binding: FragmentPlaylistBinding
+    private val songViewModel: SongViewModel by activityViewModels()
+    private var songs: MutableList<Song> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +37,12 @@ class FragmentPlaylist : Fragment() {
         displayPlaylist()
 
         binding.icSearch.setOnClickListener {
-            val intent = Intent(requireContext(), ActivitySearch::class.java)
+            songViewModel.songList.observe(viewLifecycleOwner) { songList ->
+                songs = songList
+            }
+            val intent = Intent(requireContext(), ActivitySearch::class.java).apply {
+                putParcelableArrayListExtra("song_list", ArrayList(songs))
+            }
             startActivity(intent)
         }
 

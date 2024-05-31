@@ -11,7 +11,7 @@ import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.musicapp.ActivitySettings
+import com.example.musicapp.ui.ActivitySettings
 import com.example.musicapp.MediaPlayerControl
 import com.example.musicapp.R
 import com.example.musicapp.adapter.SongAdapter
@@ -23,7 +23,7 @@ import com.example.musicapp.ui.ActivitySearch
 class FragmentSongs : Fragment() {
     private lateinit var binding: FragmentSongsBinding
     private var mediaPlayerControl: MediaPlayerControl? = null
-    private var songList: MutableList<Song> = mutableListOf()
+    private var songs: MutableList<Song> = mutableListOf()
     private val songViewModel: SongViewModel by activityViewModels()
 
     override fun onAttach(context: Context) {
@@ -44,7 +44,7 @@ class FragmentSongs : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            songList = it.getParcelableArrayList<Song>("song_list")?.toMutableList()
+            songs = it.getParcelableArrayList<Song>("song_list")?.toMutableList()
                 ?: mutableListOf()
         }
     }
@@ -57,10 +57,13 @@ class FragmentSongs : Fragment() {
 
         songViewModel.songList.observe(viewLifecycleOwner) { songList ->
             displaySong(songList)
+            songs = songList
         }
 
         binding.icSearch.setOnClickListener {
-            val intent = Intent(requireContext(), ActivitySearch::class.java)
+            val intent = Intent(requireContext(), ActivitySearch::class.java).apply {
+                putParcelableArrayListExtra("song_list", ArrayList(songs))
+            }
             startActivity(intent)
         }
 
@@ -100,15 +103,16 @@ class FragmentSongs : Fragment() {
         binding.recvSong.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        val sharedPreferences = requireContext().getSharedPreferences("MusicAppPreferences", Context.MODE_PRIVATE)
+        val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val currentSongIndex = sharedPreferences.getInt("currentSongIndex", 0)
 
         val adapter = SongAdapter(requireContext(), songList) { song ->
             mediaPlayerControl?.playSong(song)
 
         }
-        adapter.setSelectedItem(currentSongIndex)
         binding.recvSong.adapter = adapter
+        adapter.setSelectedItem(currentSongIndex)
+        binding.recvSong.scrollToPosition(currentSongIndex)
     }
 
 

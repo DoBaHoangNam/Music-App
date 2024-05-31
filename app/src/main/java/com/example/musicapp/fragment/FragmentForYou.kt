@@ -1,32 +1,56 @@
 package com.example.musicapp.fragment
 
-import android.Manifest
+import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.musicapp.ActivitySettings
+import com.example.musicapp.ui.ActivitySettings
+import com.example.musicapp.MediaPlayerControl
 import com.example.musicapp.R
+import com.example.musicapp.SongViewModel
 import com.example.musicapp.adapter.AlbumAdapter
 import com.example.musicapp.databinding.FragmentForYouBinding
 import com.example.musicapp.model.Album
+import com.example.musicapp.model.Song
 import com.example.musicapp.ui.ActivitySearch
 import java.util.Calendar
 
 class FragmentForYou : Fragment() {
 
     private lateinit var binding: FragmentForYouBinding
+    private var mediaPlayerControl: MediaPlayerControl? = null
+    private var albumList: MutableList<Album> = mutableListOf()
+    private var songs: MutableList<Song> = mutableListOf()
+    private val songViewModel: SongViewModel by activityViewModels()
 
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is MediaPlayerControl) {
+            mediaPlayerControl = context
+        } else {
+            throw RuntimeException("$context must implement MediaPlayerControl")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        mediaPlayerControl = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        arguments?.let {
+            albumList = it.getParcelableArrayList<Album>("album_list")?.toMutableList()
+                ?: mutableListOf()
+        }
 
     }
 
@@ -52,9 +76,17 @@ class FragmentForYou : Fragment() {
         }
 
 
-        displayAlbum()
+        songViewModel.albumList.observe(viewLifecycleOwner) { albumList ->
+            displayAlbum(albumList)
+        }
+
         binding.icSearch.setOnClickListener {
-            val intent = Intent(requireContext(), ActivitySearch::class.java)
+            songViewModel.songList.observe(viewLifecycleOwner) { songList ->
+                songs = songList
+            }
+            val intent = Intent(requireContext(), ActivitySearch::class.java).apply {
+                putParcelableArrayListExtra("song_list", ArrayList(songs))
+            }
             startActivity(intent)
         }
 
@@ -68,26 +100,30 @@ class FragmentForYou : Fragment() {
 
     }
 
-    private fun displayAlbum() {
+    private fun displayAlbum(albumList: MutableList<Album>) {
+        val defaultImage = R.mipmap.ic_song_round.toString()
+        // Filter the album list to include only albums with a non-empty albumArt
+        val filteredAlbumList = albumList.filter { it.albumArt.isNotEmpty() && it.albumArt != defaultImage }
+
+        // Limit the list to the first 10 albums
+        val limitedAlbumList = filteredAlbumList.shuffled().take(10).toMutableList()
+
+        // Set up the RecyclerView with the filtered and limited list
         binding.recvSuggestion.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        val adapter = AlbumAdapter(getListAlbum(), findNavController())
+        val adapter = AlbumAdapter(limitedAlbumList, findNavController())
         binding.recvSuggestion.adapter = adapter
+        Log.d("album_check", limitedAlbumList.size.toString())
     }
 
-    private fun getListAlbum(): MutableList<Album> {
-        val list = mutableListOf<Album>()
-        list.add(Album("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Album("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Album("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Album("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Album("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Album("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Album("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Album("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Album("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-        list.add(Album("Sèn Hoàng Mỹ Lam", R.drawable.img_song))
-
-        return list
+    companion object {
+        fun newInstance(albumList: MutableList<Album>): FragmentForYou {
+            val fragment = FragmentForYou()
+            val args = Bundle()
+            args.putParcelableArrayList("album_list", ArrayList(albumList))
+            fragment.arguments = args
+            return fragment
+        }
     }
+
 }

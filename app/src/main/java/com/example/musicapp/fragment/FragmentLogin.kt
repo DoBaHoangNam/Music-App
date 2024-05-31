@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.musicapp.R
 import com.example.musicapp.databinding.FragmentLoginBinding
 import com.example.musicapp.model.User
+import com.example.musicapp.ui.ActivitySplashScreen
 import com.example.musicapp.ui.MainActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -199,7 +200,7 @@ class FragmentLogin : Fragment() {
         }
 
     private fun updateUi(user: FirebaseUser?) {
-        val intent = Intent(requireContext(), MainActivity::class.java)
+        val intent = Intent(requireContext(), ActivitySplashScreen::class.java)
         startActivity(intent)
         activity?.finish()
     }
