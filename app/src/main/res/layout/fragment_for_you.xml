@@ -143,6 +143,7 @@
                 android:weightSum="1">
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnHistory"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
@@ -156,6 +157,7 @@
                     android:textSize="@dimen/text_size_normal" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnLastAdded"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
@@ -178,6 +180,7 @@
                 android:weightSum="1">
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnMostPlay"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
@@ -191,6 +194,7 @@
                     android:textSize="@dimen/text_size_normal" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnShuffle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
