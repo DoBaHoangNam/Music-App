@@ -2,6 +2,7 @@ package com.example.musicapp.fragment
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,6 +30,7 @@ class FragmentForYou : Fragment() {
     private var albumList: MutableList<Album> = mutableListOf()
     private var songs: MutableList<Song> = mutableListOf()
     private val songViewModel: SongViewModel by activityViewModels()
+    private lateinit var sharedPreferences: SharedPreferences
 
 
     override fun onAttach(context: Context) {
@@ -93,6 +95,20 @@ class FragmentForYou : Fragment() {
         binding.icSetting.setOnClickListener {
             val intent = Intent(requireContext(), ActivitySettings::class.java)
             startActivity(intent)
+        }
+
+        binding.btnShuffle.setOnClickListener {
+            songViewModel.songList.observe(viewLifecycleOwner) { songList ->
+                songs = songList
+            }
+            if (songs.isNotEmpty()) {
+                val randomIndex = (0 until songs.size).random()
+                val randomSong = songs[randomIndex]
+                mediaPlayerControl?.playSong(randomSong)
+                Log.d("check_source", randomSong.toString() + " shuffle")
+                sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                sharedPreferences.edit().putString("selected_song", randomSong.songName).apply()
+            }
         }
 
         return binding.root

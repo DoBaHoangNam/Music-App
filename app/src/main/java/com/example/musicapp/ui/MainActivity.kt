@@ -1,8 +1,6 @@
 package com.example.musicapp.ui
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -14,10 +12,8 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
@@ -37,7 +33,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class MainActivity : AppCompatActivity(), MediaPlayerControl {
+class MainActivity : AppCompatActivity(), MediaPlayerControl,
+    SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var imageView: CircleImageView
     private var mediaPlayer: MediaPlayer? = null
@@ -52,12 +49,17 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
     private lateinit var sharedPreferences: SharedPreferences
     private val PREF_NAME = "MyPrefs"
     private val KEY_SELECTED_SONG = "selected_song"
+    private var isShuffle: Boolean = false
+    private var isRepeat: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
 
         songList = intent.getParcelableArrayListExtra<Song>("song_list")?.toMutableList()
             ?: mutableListOf()
@@ -93,38 +95,53 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
 
         binding.icPlay.setOnClickListener {
             playPauseSong()
-            Toast.makeText(this, "aaaaaaaaa", Toast.LENGTH_SHORT).show()
         }
 
         binding.playBtn.setOnClickListener {
             playPauseSong()
-            Toast.makeText(this, "aaaaaaaaa", Toast.LENGTH_SHORT).show()
         }
 
         // Add click listeners for skip and back buttons
         binding.icNext.setOnClickListener {
             skipToNextSong() // Skip to the next song
-            Toast.makeText(this, "bbbbbbb", Toast.LENGTH_SHORT).show()
             Log.d("check_song", currentSongIndex.toString())
         }
 
         binding.icBack.setOnClickListener {
             backToPreviousSong() // Go back to the previous song
-            Toast.makeText(this, "cccccccc", Toast.LENGTH_SHORT).show()
             Log.d("check_song", currentSongIndex.toString())
         }
 
         binding.backBtn.setOnClickListener {
             backToPreviousSong() // Go back to the previous song
-            Toast.makeText(this, "cccccccc", Toast.LENGTH_SHORT).show()
             Log.d("check_song", currentSongIndex.toString())
         }
 
         binding.nextBtn.setOnClickListener {
             skipToNextSong() // Skip to the next song
-            Toast.makeText(this, "bbbbbbb", Toast.LENGTH_SHORT).show()
             Log.d("check_song", currentSongIndex.toString())
         }
+
+        isShuffle = false
+        binding.btnshuffle.setOnClickListener {
+            if (isShuffle) {
+                binding.btnshuffle.setImageResource(R.drawable.baseline_shuffle_on_24)
+            } else {
+                binding.btnshuffle.setImageResource(R.drawable.icon_shuffle)
+            }
+            isShuffle = !isShuffle
+        }
+
+        isRepeat = false
+        binding.btnRepeat.setOnClickListener {
+            if (isRepeat) {
+                binding.btnRepeat.setImageResource(R.drawable.baseline_repeat_one_24)
+            } else {
+                binding.btnRepeat.setImageResource(R.drawable.baseline_repeat_24)
+            }
+            isRepeat = !isRepeat
+        }
+
 
         updateTimeRunnable = object : Runnable {
             override fun run() {
@@ -239,8 +256,8 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
             isFavorite = !isFavorite
         }
 
-    }
 
+    }
 
 
     fun showBottomSheet(songTitle: String, artistName: String, duration: String, imageUrl: String) {
@@ -295,8 +312,6 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
             handler.post(updateTimeRunnable)
         }
     }
-
-
 
 
     override fun playSong(song: Song) {
@@ -474,6 +489,17 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl {
         val editor = sharedPreferences.edit()
         editor.remove(KEY_SELECTED_SONG)
         editor.apply()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (key == KEY_SELECTED_SONG) {
+            playSelectedSongIfAvailable()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
 

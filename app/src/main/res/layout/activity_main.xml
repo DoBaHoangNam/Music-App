@@ -371,6 +371,7 @@
                     app:layout_constraintTop_toBottomOf="@id/timing">
 
                     <ImageView
+                        android:id="@+id/btnshuffle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/definite_dimen_20"
@@ -400,6 +401,7 @@
                         android:background="@drawable/baseline_skip_next_24" />
 
                     <ImageView
+                        android:id="@+id/btnRepeat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
