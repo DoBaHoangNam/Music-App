@@ -68,7 +68,7 @@
         />
 
     <TextView
-        android:id="@+id/albumNameTv"
+        android:id="@+id/artistNameTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/albumImg"
@@ -82,10 +82,10 @@
         />
 
     <TextView
-        android:id="@+id/infoAlbumTv"
+        android:id="@+id/infoArtistTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/albumNameTv"
+        app:layout_constraintTop_toBottomOf="@+id/artistNameTv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="2 sóng | 20:36"
@@ -101,7 +101,7 @@
         android:layout_marginStart="@dimen/definite_dimen_10"
         android:layout_marginEnd="@dimen/definite_dimen_10"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/infoAlbumTv"
+        app:layout_constraintTop_toBottomOf="@+id/infoArtistTv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/definite_dimen_12"

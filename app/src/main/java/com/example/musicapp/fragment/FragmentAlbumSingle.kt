@@ -68,6 +68,11 @@ class FragmentAlbumSingle : Fragment() {
             isFavorite = !isFavorite
         }
 
+        songViewModel.songList.observe(viewLifecycleOwner) { songList ->
+            songs = songList
+            Log.d("FragmentArtistSingle", " songs list2: $songs")
+        }
+
         displayAlbumDetails()
         displaySong()
 
@@ -76,9 +81,6 @@ class FragmentAlbumSingle : Fragment() {
             fragmentManager.popBackStack()
         }
         binding.icSearch.setOnClickListener {
-            songViewModel.songList.observe(viewLifecycleOwner) { songList ->
-                songs = songList
-            }
             val intent = Intent(requireContext(), ActivitySearch::class.java).apply {
                 putParcelableArrayListExtra("song_list", ArrayList(songs))
             }
@@ -111,7 +113,7 @@ class FragmentAlbumSingle : Fragment() {
             binding.singerNameTv.text = album.artist
             Glide.with(this)
                 .load(album.albumArt)
-                .placeholder(R.mipmap.ic_song_round)
+                .placeholder(R.mipmap.ic_song_round_high)
                 .into(binding.albumImg)
             binding.infoAlbumTv.text = album.numberOfSongs.toString() + " songs"
         }
@@ -149,13 +151,16 @@ class FragmentAlbumSingle : Fragment() {
 
     private fun getListSong(): MutableList<Song> {
         val list = mutableListOf<Song>()
-        album?.let {
-            // Giả sử album có danh sách bài hát, bạn cần thay đổi mô hình dữ liệu phù hợp
-            it.songs?.forEach { song ->
-                list.add(Song(song.id, song.songName, song.singerName, song.album,song.duration, song.data, song.image))
+        var songList = songViewModel.songList.value
+        Log.d("FragmentArtistSingle", " songs list: $songList")
+        if (songList != null) {
+            album?.let { album ->
+                list.addAll(songList.filter { song ->
+                    song.album == album.name
+                })
             }
-            Log.d("check_source",it.songs.toString() + "aaaaa")
         }
+        Log.d("FragmentArtistSingle", "Filtered songs list: $list")
         return list
 
     }

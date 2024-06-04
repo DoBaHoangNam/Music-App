@@ -1,5 +1,6 @@
 package com.example.musicapp.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.media.AudioManager
@@ -8,6 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
@@ -17,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
+import com.example.musicapp.DataHolder
 import com.example.musicapp.MediaPlayerControl
 import com.example.musicapp.R
 import com.example.musicapp.SongViewModel
@@ -51,8 +54,12 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
     private val KEY_SELECTED_SONG = "selected_song"
     private var isShuffle: Boolean = false
     private var isRepeat: Boolean = false
+    private val SEEK_TIME_MS = 5000 // Thời gian tua (5 giây)
+    private var isSkippingForward = false
+    private var isSkippingBackward = false
 
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -61,16 +68,25 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
         sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
 
-        songList = intent.getParcelableArrayListExtra<Song>("song_list")?.toMutableList()
-            ?: mutableListOf()
-        albumList = intent.getParcelableArrayListExtra<Album>("album_list")?.toMutableList()
-            ?: mutableListOf()
-        artistList = intent.getParcelableArrayListExtra<Artist>("artist_list")?.toMutableList()
-            ?: mutableListOf()
+//        songList = intent.getParcelableArrayListExtra<Song>("song_list")?.toMutableList()
+//            ?: mutableListOf()
+//        albumList = intent.getParcelableArrayListExtra<Album>("album_list")?.toMutableList()
+//            ?: mutableListOf()
+//        artistList = intent.getParcelableArrayListExtra<Artist>("artist_list")?.toMutableList()
+//            ?: mutableListOf()
+        songList = DataHolder.songList
+        albumList = DataHolder.albumList
+        artistList = DataHolder.artistList
 
-        Log.d("check_source", albumList.size.toString() + " album2")
-        Log.d("check_source", songList.size.toString() + " song2")
-        Log.d("check_source", artistList.size.toString() + " artist2")
+        if (albumList != null) {
+            Log.d("check_source", albumList.size.toString() + " album2")
+        }
+        if (songList != null) {
+            Log.d("check_source", songList.size.toString() + " song2")
+        }
+        if (artistList != null) {
+            Log.d("check_source", artistList.size.toString() + " artist2")
+        }
 
 
         loadFragment()
@@ -122,25 +138,71 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
             Log.d("check_song", currentSongIndex.toString())
         }
 
-        isShuffle = false
-        binding.btnshuffle.setOnClickListener {
-            if (isShuffle) {
-                binding.btnshuffle.setImageResource(R.drawable.baseline_shuffle_on_24)
-            } else {
-                binding.btnshuffle.setImageResource(R.drawable.icon_shuffle)
-            }
-            isShuffle = !isShuffle
+        binding.icNext.setOnLongClickListener {
+            startSkippingForward()
+            true
         }
 
-        isRepeat = false
-        binding.btnRepeat.setOnClickListener {
-            if (isRepeat) {
-                binding.btnRepeat.setImageResource(R.drawable.baseline_repeat_one_24)
-            } else {
-                binding.btnRepeat.setImageResource(R.drawable.baseline_repeat_24)
+        binding.icNext.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                stopSkippingForward()
             }
-            isRepeat = !isRepeat
+            false
         }
+
+        binding.icBack.setOnLongClickListener {
+            startSkippingBackward()
+            true
+        }
+
+        binding.icBack.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                stopSkippingBackward()
+            }
+            false
+        }
+
+        binding.nextBtn.setOnLongClickListener {
+            startSkippingForward()
+            true
+        }
+
+        binding.nextBtn.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                stopSkippingForward()
+            }
+            false
+        }
+
+        binding.backBtn.setOnLongClickListener {
+            startSkippingBackward()
+            true
+        }
+
+        binding.backBtn.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                stopSkippingBackward()
+            }
+            false
+        }
+
+
+
+        binding.btnshuffle.setOnClickListener {
+            isShuffle = !isShuffle
+            updateShuffleButton()
+        }
+
+        binding.btnRepeat.setOnClickListener {
+            isRepeat = !isRepeat
+            updateRepeatButton()
+        }
+
+        mediaPlayer?.setOnCompletionListener {
+            playNextSong()
+        }
+
+
 
 
         updateTimeRunnable = object : Runnable {
@@ -149,6 +211,7 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
                 handler.postDelayed(this, 1000) // Update every second
             }
         }
+
 
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -259,6 +322,55 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
 
     }
 
+    private val skipForwardRunnable = object : Runnable {
+        override fun run() {
+            if (isSkippingForward) {
+                seekForward()
+                handler.postDelayed(this, 200) // Lặp lại sau mỗi 200ms
+            }
+        }
+    }
+
+    private val skipBackwardRunnable = object : Runnable {
+        override fun run() {
+            if (isSkippingBackward) {
+                seekBackward()
+                handler.postDelayed(this, 200) // Lặp lại sau mỗi 200ms
+            }
+        }
+    }
+
+
+    private fun updateShuffleButton() {
+        if (isShuffle) {
+            binding.btnshuffle.setImageResource(R.drawable.baseline_shuffle_on_24)
+        } else {
+            binding.btnshuffle.setImageResource(R.drawable.icon_shuffle)
+        }
+    }
+
+    private fun updateRepeatButton() {
+        if (isRepeat) {
+            binding.btnRepeat.setImageResource(R.drawable.baseline_repeat_one_24)
+        } else {
+            binding.btnRepeat.setImageResource(R.drawable.baseline_repeat_24)
+        }
+    }
+
+    private fun playNextSong() {
+        mediaPlayer?.let { player ->
+            player.release() // Release current media player
+            val nextIndex = when {
+                isRepeat -> currentSongIndex // Repeat current song
+                isShuffle -> (songList.indices).random() // Shuffle songs
+                else -> (currentSongIndex + 1) % songList.size // Play next song in sequence
+            }
+            currentSongIndex = nextIndex
+            saveCurrentSongIndex()
+            playSong(songList[currentSongIndex])
+        }
+    }
+
 
     fun showBottomSheet(songTitle: String, artistName: String, duration: String, imageUrl: String) {
         binding.tvSongName.text = songTitle
@@ -269,11 +381,11 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
         if (imageUrl.isNotEmpty()) {
             Glide.with(this)
                 .load(imageUrl)
-                .placeholder(R.mipmap.ic_song_round)
+                .placeholder(R.drawable.ic_song_foreground)
                 .into(binding.imgSong)
             Glide.with(this)
                 .load(imageUrl)
-                .placeholder(R.mipmap.ic_song_round)
+                .placeholder(R.drawable.ic_song_foreground)
                 .into(binding.imgSongPlaying)
 
         }
@@ -291,26 +403,30 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
             val currentPosition = it.currentPosition / 1000 // Get the current position in seconds
             binding.seekBar.progress = currentPosition
             binding.startTimeTv.text = formatDuration(currentPosition.toLong() * 1000)
+            if(binding.seekBar.progress == binding.seekBar.max) playNextSong()
         }
+
+
     }
 
 
     override fun playPauseSong() {
-        if (mediaPlayer == null) return
-
-        if (isPlaying) {
-            mediaPlayer?.pause()
-            isPlaying = false
-            binding.icPlay.setBackgroundResource(R.drawable.baseline_play_arrow_24)
-            binding.playBtn.setBackgroundResource(R.drawable.baseline_play_arrow_24)
-            handler.removeCallbacks(updateTimeRunnable)
-        } else {
-            mediaPlayer?.start()
-            isPlaying = true
-            binding.icPlay.setBackgroundResource(R.drawable.baseline_pause_24)
-            binding.playBtn.setBackgroundResource(R.drawable.baseline_pause_24)
-            handler.post(updateTimeRunnable)
+        mediaPlayer?.let { player ->
+            if (player.isPlaying) {
+                player.pause()
+                isPlaying = false
+                binding.icPlay.setBackgroundResource(R.drawable.baseline_play_arrow_24)
+                binding.playBtn.setBackgroundResource(R.drawable.baseline_play_arrow_24)
+                handler.removeCallbacks(updateTimeRunnable)
+            } else {
+                player.start()
+                isPlaying = true
+                binding.icPlay.setBackgroundResource(R.drawable.baseline_pause_24)
+                binding.playBtn.setBackgroundResource(R.drawable.baseline_pause_24)
+                handler.post(updateTimeRunnable)
+            }
         }
+
     }
 
 
@@ -354,21 +470,64 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
 
     // Function to skip to the next song
     private fun skipToNextSong() {
-        if (currentSongIndex < songList.size - 1) {
-            currentSongIndex++
-            playSong(songList[currentSongIndex])
+        if (isShuffle) {
+            currentSongIndex = (songList.indices).random()
+        } else {
+            currentSongIndex = if (currentSongIndex + 1 > songList.size) 0 else currentSongIndex + 1
         }
+        playSong(songList[currentSongIndex])
         saveCurrentSongIndex()
     }
 
     // Function to go back to the previous song
     private fun backToPreviousSong() {
-        if (currentSongIndex > 0) {
-            currentSongIndex--
-            playSong(songList[currentSongIndex])
+        if (isShuffle) {
+            currentSongIndex = (songList.indices).random()
+        } else {
+            currentSongIndex = if (currentSongIndex - 1 < 0) songList.size - 1 else currentSongIndex - 1
         }
+        playSong(songList[currentSongIndex])
         saveCurrentSongIndex()
     }
+    private fun startSkippingForward() {
+        isSkippingForward = true
+        handler.post(skipForwardRunnable)
+    }
+    private fun stopSkippingForward() {
+        isSkippingForward = false
+        handler.removeCallbacks(skipForwardRunnable)
+    }
+
+    private fun startSkippingBackward() {
+        isSkippingBackward = true
+        handler.post(skipBackwardRunnable)
+    }
+
+    private fun stopSkippingBackward() {
+        isSkippingBackward = false
+        handler.removeCallbacks(skipBackwardRunnable)
+    }
+
+    private fun seekBackward() {
+        mediaPlayer?.let {
+            val newPosition = it.currentPosition - SEEK_TIME_MS
+            it.seekTo(newPosition.coerceAtLeast(0))
+        }
+    }
+
+
+
+
+    private fun seekForward() {
+        mediaPlayer?.let {
+            val newPosition = it.currentPosition + SEEK_TIME_MS
+            it.seekTo(newPosition.coerceAtMost(it.duration))
+        }
+    }
+
+
+
+
 
 
     fun startRotation() {
@@ -386,17 +545,9 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
     }
 
     private fun loadFragment() {
-        songList = intent.getParcelableArrayListExtra<Song>("song_list")?.toMutableList()
-            ?: mutableListOf()
-
-        albumList = intent.getParcelableArrayListExtra<Album>("album_list")?.toMutableList()
-            ?: mutableListOf()
-
         songViewModel.songList.value = songList
         songViewModel.albumList.value = albumList
         songViewModel.artistList.value = artistList
-
-
     }
 
     override fun onPause() {
@@ -434,14 +585,15 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
         binding.endTimeTv.text = formatDuration(duration.toLong())
         binding.tvNameSongPlaying.text = songTitle
         binding.tvSingerOfSongPlaying.text = artistName
+        binding.seekBar.max = (songList[currentSongIndex].duration / 1000).toInt()
         if (imageUrl.isNotEmpty()) {
             Glide.with(this)
                 .load(imageUrl)
-                .placeholder(R.mipmap.ic_song_round)
+                .placeholder(R.mipmap.ic_song_round_high)
                 .into(binding.imgSong)
             Glide.with(this)
                 .load(imageUrl)
-                .placeholder(R.mipmap.ic_song_round)
+                .placeholder(R.mipmap.ic_song_round_high)
                 .into(binding.imgSongPlaying)
 
         }
