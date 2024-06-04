@@ -1,20 +1,17 @@
 package com.example.musicapp.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.example.musicapp.R
 import com.example.musicapp.model.Song
-import com.example.musicapp.ui.MainActivity
 
 class SongSearchAdapter(
     private val requireContext: Context,
@@ -35,7 +32,7 @@ class SongSearchAdapter(
             songName.text = song.songName
             Glide.with(itemView.context)
                 .load(song.image)
-                .placeholder(R.mipmap.ic_song_round)
+                .placeholder(R.mipmap.ic_song_round_high)
                 .into(image)
 
             if (selectedItemPosition == adapterPosition) {

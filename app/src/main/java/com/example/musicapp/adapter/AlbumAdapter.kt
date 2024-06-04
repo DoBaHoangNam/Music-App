@@ -35,7 +35,7 @@ class AlbumAdapter(
         holder.singerName.text = currentItem.name
         Glide.with(holder.itemView.context)
             .load(currentItem.albumArt) // Load the image from the URL or URI
-            .placeholder(R.mipmap.ic_song_round) // Placeholder image
+            .placeholder(R.mipmap.ic_song_round_high) // Placeholder image
             .into(holder.image)
 
         holder.itemView.setOnClickListener {

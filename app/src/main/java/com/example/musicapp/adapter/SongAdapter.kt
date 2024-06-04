@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.example.musicapp.R
-import com.example.musicapp.model.Album
 import com.example.musicapp.model.Song
 
 class SongAdapter(private val context: Context,
@@ -31,7 +30,7 @@ class SongAdapter(private val context: Context,
             songName.text = song.songName
             Glide.with(itemView.context)
                 .load(song.image)
-                .placeholder(R.mipmap.ic_song_round)
+                .placeholder(R.mipmap.ic_song_round_high)
                 .into(image)
 
             if (selectedItemPosition == adapterPosition) {

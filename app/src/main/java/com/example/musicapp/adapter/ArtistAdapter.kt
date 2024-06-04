@@ -1,10 +1,12 @@
 package com.example.musicapp.adapter
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -38,7 +40,9 @@ class ArtistAdapter(
             .into(holder.image)
 
         holder.itemView.setOnClickListener {
-            navController.navigate(R.id.action_fragmentArtist_to_fragmentArtistSingle)
+            val bundle = Bundle().apply {
+                putParcelable("artist", currentItem)}
+            navController.navigate(R.id.action_fragmentArtist_to_fragmentArtistSingle, bundle)
         }
     }
 

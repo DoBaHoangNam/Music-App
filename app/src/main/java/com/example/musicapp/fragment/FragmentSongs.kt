@@ -3,6 +3,7 @@ package com.example.musicapp.fragment
 import com.example.musicapp.SongViewModel
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,11 +21,15 @@ import com.example.musicapp.model.Song
 import com.example.musicapp.ui.ActivitySearch
 
 
-class FragmentSongs : Fragment() {
+class FragmentSongs : Fragment(),SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var binding: FragmentSongsBinding
     private var mediaPlayerControl: MediaPlayerControl? = null
     private var songs: MutableList<Song> = mutableListOf()
     private val songViewModel: SongViewModel by activityViewModels()
+    private lateinit var sharedPreferences: SharedPreferences
+    private val PREF_NAME = "MyPrefs"
+    private var currentSongIndex = 0
+    private lateinit var adapter: SongAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -103,10 +108,10 @@ class FragmentSongs : Fragment() {
         binding.recvSong.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val currentSongIndex = sharedPreferences.getInt("currentSongIndex", 0)
+        sharedPreferences = requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        currentSongIndex = sharedPreferences.getInt("currentSongIndex", 0)
 
-        val adapter = SongAdapter(requireContext(), songList) { song ->
+        adapter = SongAdapter(requireContext(), songList) { song ->
             mediaPlayerControl?.playSong(song)
 
         }
@@ -124,6 +129,26 @@ class FragmentSongs : Fragment() {
             fragment.arguments = args
             return fragment
         }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (key == "currentSongIndex") {
+            if (sharedPreferences != null) {
+                currentSongIndex = sharedPreferences.getInt("currentSongIndex", 0)
+                adapter.setSelectedItem(currentSongIndex)
+                binding.recvSong.scrollToPosition(currentSongIndex)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
 

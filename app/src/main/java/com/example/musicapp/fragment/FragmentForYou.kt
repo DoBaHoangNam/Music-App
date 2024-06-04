@@ -117,7 +117,7 @@ class FragmentForYou : Fragment() {
     }
 
     private fun displayAlbum(albumList: MutableList<Album>) {
-        val defaultImage = R.mipmap.ic_song_round.toString()
+        val defaultImage = R.mipmap.ic_song_round_high.toString()
         // Filter the album list to include only albums with a non-empty albumArt
         val filteredAlbumList = albumList.filter { it.albumArt.isNotEmpty() && it.albumArt != defaultImage }
 

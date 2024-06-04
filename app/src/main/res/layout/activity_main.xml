@@ -72,6 +72,7 @@
                     android:layout_width="@dimen/definite_dimen_40"
                     android:layout_height="@dimen/definite_dimen_40"
                     android:src="@drawable/img_song"
+                    android:background="@color/white"
                     app:shapeAppearanceOverlay="@style/circle" />
 
                 <LinearLayout
@@ -208,6 +209,7 @@
                     android:layout_height="@dimen/definite_dimen_200"
                     android:layout_marginTop="@dimen/definite_dimen_80"
                     android:src="@drawable/img_song"
+                    app:civ_circle_background_color="@color/white"
                     app:layout_constraintBottom_toTopOf="@id/tvSongName"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
