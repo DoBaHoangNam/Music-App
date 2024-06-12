@@ -103,7 +103,7 @@ class FragmentSignUp : Fragment() {
     private fun saveUserData() {
         email = binding.email.text.toString().trim()
         password = binding.password.text.toString().trim()
-        val user = User(email, password)
+        val user = User(email,email, password)
         val userId = FirebaseAuth.getInstance()
             .currentUser!!.uid
         database.child("user").child(userId).setValue(user)
@@ -124,7 +124,7 @@ class FragmentSignUp : Fragment() {
                                 Toast.LENGTH_SHORT
                             ).show()
                             val email = account?.email
-                            val user = User(email, "")
+                            val user = User(email,email, "")
                             val userId = FirebaseAuth.getInstance()
                                 .currentUser!!.uid
                             database.child("user").child(userId).setValue(user)

@@ -2,6 +2,7 @@ package com.example.musicapp.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -16,18 +17,26 @@ import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
+import com.example.musicapp.R
 import com.example.musicapp.DataHolder
 import com.example.musicapp.MediaPlayerControl
-import com.example.musicapp.R
 import com.example.musicapp.SongViewModel
 import com.example.musicapp.databinding.ActivityMainBinding
 import com.example.musicapp.model.Album
 import com.example.musicapp.model.Artist
 import com.example.musicapp.model.Song
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.CoroutineScope
@@ -54,9 +63,14 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
     private val KEY_SELECTED_SONG = "selected_song"
     private var isShuffle: Boolean = false
     private var isRepeat: Boolean = false
-    private val SEEK_TIME_MS = 5000 // Thời gian tua (5 giây)
+    private var isFavorite = false
+    private val SEEK_TIME_MS = 2000
     private var isSkippingForward = false
     private var isSkippingBackward = false
+    private lateinit var databaseReference: DatabaseReference
+    private lateinit var database: FirebaseDatabase
+    private lateinit var auth: FirebaseAuth
+    private lateinit var userId: String
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -67,26 +81,29 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
 
         sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        auth = FirebaseAuth.getInstance()
+        databaseReference = FirebaseDatabase.getInstance().reference
 
-//        songList = intent.getParcelableArrayListExtra<Song>("song_list")?.toMutableList()
-//            ?: mutableListOf()
-//        albumList = intent.getParcelableArrayListExtra<Album>("album_list")?.toMutableList()
-//            ?: mutableListOf()
-//        artistList = intent.getParcelableArrayListExtra<Artist>("artist_list")?.toMutableList()
-//            ?: mutableListOf()
+
         songList = DataHolder.songList
         albumList = DataHolder.albumList
         artistList = DataHolder.artistList
 
-        if (albumList != null) {
-            Log.d("check_source", albumList.size.toString() + " album2")
+        getPlayedSongsList { playedSongs ->
+            DataHolder.playedSongs = playedSongs
+            Log.d("Main_Activity", "Played Songs: $playedSongs")
         }
-        if (songList != null) {
-            Log.d("check_source", songList.size.toString() + " song2")
+
+        fetchFavoriteSongs { favoriteSongs ->
+            DataHolder.favouriteSongs = favoriteSongs
+            Log.d("Main_Activity", "Favorite songs: $favoriteSongs")
         }
-        if (artistList != null) {
-            Log.d("check_source", artistList.size.toString() + " artist2")
+
+        fetchMostPlayedSongs { mostPlayedSong ->
+            DataHolder.mostPlayedSongs = mostPlayedSong
+            Log.d("Main_Activity", "Most Played songs: $mostPlayedSong")
         }
+
 
 
         loadFragment()
@@ -106,6 +123,20 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
         binding.btnCollapse.setOnClickListener {
             layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
         }
+
+        binding.btnAddToPlaylist.setOnClickListener {
+            val songNameToAdd = songList[currentSongIndex].songName
+            Log.d("MainActivity", "Button clicked, songNameToAdd: $songNameToAdd")
+
+
+            val intent = Intent(this, ActivityAlbumSelected::class.java).apply {
+                putExtra("song_name", songNameToAdd)
+            }
+            startActivity(intent)
+
+            layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+        }
+
 
 
 
@@ -256,6 +287,7 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
                     bottomNavigationView.visibility = View.GONE
                     binding.bottomSheetNowPlaying.visibility = View.VISIBLE
                     binding.smallControlBar.visibility = View.GONE
+                    checkIfSongIsFavorite(songList[currentSongIndex])
 
 
                 } else if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
@@ -303,20 +335,8 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
             }
         }
 
-        var isFavorite = false
         binding.icAddToFavorite.setOnClickListener {
-
-            if (isFavorite) {
-                binding.icAddToFavorite.setImageResource(R.drawable.baseline_favorite_border_blue_24)
-            } else {
-                binding.icLove.visibility = View.VISIBLE
-                binding.icAddToFavorite.setImageResource(R.drawable.baseline_favorite_24)
-                CoroutineScope(Dispatchers.Main).launch {
-                    delay(2000)
-                    binding.icLove.visibility = View.INVISIBLE
-                }
-            }
-            isFavorite = !isFavorite
+            toggleFavoriteStatus()
         }
 
 
@@ -390,6 +410,7 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
 
         }
         binding.slidingUp.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+
     }
 
     fun formatDuration(duration: Long): String {
@@ -403,7 +424,7 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
             val currentPosition = it.currentPosition / 1000 // Get the current position in seconds
             binding.seekBar.progress = currentPosition
             binding.startTimeTv.text = formatDuration(currentPosition.toLong() * 1000)
-            if(binding.seekBar.progress == binding.seekBar.max) playNextSong()
+            if (binding.seekBar.progress == binding.seekBar.max) playNextSong()
         }
 
 
@@ -457,6 +478,52 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
         }
 
         currentSongIndex = songList.indexOf(song)
+
+
+        getPlayedSongsList { playedSongs ->
+            var recentPlayed = playedSongs
+            val existingSongIndex = recentPlayed.indexOf(song.songName)
+            if (existingSongIndex != -1) {
+                // Remove the existing song if found
+                recentPlayed.removeAt(existingSongIndex)
+            }
+            recentPlayed.add(song.songName)
+            savePlayedSongsList(recentPlayed)
+
+            DataHolder.playedSongs = recentPlayed
+            Log.d("Main_Activity", "$recentPlayed history")
+        }
+
+        checkIfSongIsFavorite(song)
+        incrementPlayCount(song)
+
+        fetchFavoriteSongs { favoriteSongs ->
+            DataHolder.favouriteSongs = favoriteSongs
+            Log.d("Main_Activity", "Favorite songs: $favoriteSongs")
+        }
+
+        fetchMostPlayedSongs { mostPlayedSong ->
+            DataHolder.mostPlayedSongs = mostPlayedSong
+            Log.d("Main_Activity", "Most Played songs: $mostPlayedSong")
+        }
+
+
+    }
+
+    override fun playSong(uri: String) {
+        mediaPlayer?.apply {
+            // Đảm bảo rằng MediaPlayer đang không phát trước khi bắt đầu phát bài hát mới
+            stop()
+            reset()
+            // Set data source là URI của bài hát
+            setDataSource(uri)
+            // Chuẩn bị MediaPlayer để phát bài hát
+            prepareAsync()
+            // Đặt sự kiện để bắt đầu phát khi chuẩn bị đã hoàn thành
+            setOnPreparedListener {
+                start()
+            }
+        }
     }
 
     override fun stopSong() {
@@ -484,15 +551,18 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
         if (isShuffle) {
             currentSongIndex = (songList.indices).random()
         } else {
-            currentSongIndex = if (currentSongIndex - 1 < 0) songList.size - 1 else currentSongIndex - 1
+            currentSongIndex =
+                if (currentSongIndex - 1 < 0) songList.size - 1 else currentSongIndex - 1
         }
         playSong(songList[currentSongIndex])
         saveCurrentSongIndex()
     }
+
     private fun startSkippingForward() {
         isSkippingForward = true
         handler.post(skipForwardRunnable)
     }
+
     private fun stopSkippingForward() {
         isSkippingForward = false
         handler.removeCallbacks(skipForwardRunnable)
@@ -515,20 +585,12 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
         }
     }
 
-
-
-
     private fun seekForward() {
         mediaPlayer?.let {
             val newPosition = it.currentPosition + SEEK_TIME_MS
             it.seekTo(newPosition.coerceAtMost(it.duration))
         }
     }
-
-
-
-
-
 
     fun startRotation() {
         object : Runnable {
@@ -636,6 +698,159 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
             }
         }
     }
+
+    // Lưu danh sách bài hát đã phát
+    private fun savePlayedSongsList(playedSongs: List<String>) {
+        userId = auth.currentUser?.uid ?: ""
+        val recentPlaylistRef: DatabaseReference =
+            database.reference.child("user").child(userId).child("playedSongs")
+        recentPlaylistRef.setValue(playedSongs)
+    }
+
+    // Lấy danh sách bài hát đã phát
+    private fun getPlayedSongsList(callback: (MutableList<String>) -> Unit) {
+        database = FirebaseDatabase.getInstance()
+        userId = auth.currentUser?.uid ?: ""
+
+        val recentPlaylistRef: DatabaseReference =
+            database.reference.child("user").child(userId).child("playedSongs")
+        recentPlaylistRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val dataSnapshot = task.result
+                val playedSongs = mutableListOf<String>()
+                if (dataSnapshot.exists()) {
+                    for (snapshot in dataSnapshot.children) {
+                        val song = snapshot.getValue(String::class.java)
+                        song?.let { playedSongs.add(it) }
+                    }
+                }
+                callback(playedSongs)
+            } else {
+                // Handle error if needed
+                callback(mutableListOf())
+            }
+        }
+    }
+
+    private fun checkIfSongIsFavorite(song: Song) {
+        val favoriteSongsRef = databaseReference.child("user").child(auth.currentUser?.uid ?: "")
+            .child("favouriteSongs")
+        favoriteSongsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                isFavorite =
+                    snapshot.children.any { it.getValue(String::class.java) == song.songName }
+                updateFavoriteIcon()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("MainActivity", "Failed to check if song is favorite: ${error.message}")
+            }
+        })
+    }
+
+    private fun toggleFavoriteStatus() {
+        val favoriteSongsRef = databaseReference.child("user").child(auth.currentUser?.uid ?: "")
+            .child("favouriteSongs")
+        val currentSongName = songList[currentSongIndex].songName
+        if (isFavorite) {
+            favoriteSongsRef.orderByValue().equalTo(currentSongName)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (favoriteSnapshot in snapshot.children) {
+                            favoriteSnapshot.ref.removeValue()
+                        }
+                        isFavorite = false
+                        updateFavoriteIcon()
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.e("MainActivity", "Failed to remove favorite song: ${error.message}")
+                    }
+                })
+        } else {
+            val newFavoriteRef = favoriteSongsRef.push()
+            newFavoriteRef.setValue(currentSongName)
+            isFavorite = true
+            updateFavoriteIcon()
+        }
+    }
+
+    private fun fetchFavoriteSongs(callback: (MutableList<String>) -> Unit) {
+        val favoriteSongsRef = databaseReference.child("user").child(auth.currentUser?.uid ?: "")
+            .child("favouriteSongs")
+        favoriteSongsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val favoriteSongs = mutableListOf<String>()
+                for (favoriteSnapshot in snapshot.children) {
+                    val songName = favoriteSnapshot.getValue(String::class.java)
+                    songName?.let { favoriteSongs.add(it) }
+                }
+                callback(favoriteSongs)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("Main_Activity", "Failed to fetch favorite songs: ${error.message}")
+            }
+        })
+    }
+
+
+    private fun updateFavoriteIcon() {
+        if (isFavorite) {
+            binding.icLove.visibility = View.VISIBLE
+            binding.icAddToFavorite.setImageResource(R.drawable.baseline_favorite_solid_24)
+            CoroutineScope(Dispatchers.Main).launch {
+                delay(2000)
+                binding.icLove.visibility = View.INVISIBLE
+            }
+        } else {
+            binding.icAddToFavorite.setImageResource(R.drawable.baseline_favorite_border_blue_24)
+        }
+    }
+
+    private fun incrementPlayCount(song: Song) {
+        val userUid = auth.currentUser?.uid ?: return
+        val songRef = databaseReference.child("user").child(userUid).child("playCounts")
+            .child(song.id.toString())  // Storing play counts under the user's node
+        songRef.child("name").setValue(song.songName)  // Ensure the song name is stored
+        songRef.child("playCount").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val currentPlayCount = snapshot.getValue(Int::class.java) ?: 0
+                songRef.child("playCount").setValue(currentPlayCount + 1)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("MainActivity", "Failed to update play count: ${error.message}")
+            }
+        })
+    }
+
+    private fun fetchMostPlayedSongs(callback: (MutableList<String>) -> Unit) {
+        val userUid = auth.currentUser?.uid ?: return
+        val playCountsRef = databaseReference.child("user").child(userUid).child("playCounts")
+        playCountsRef.orderByChild("playCount").limitToLast(10)  // Fetch top 10 most played songs for the user
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val mostPlayedSongs = mutableListOf<String>()
+                    for (songSnapshot in snapshot.children) {
+                        val songData = songSnapshot.value as? Map<String, Any>
+                        if (songData != null) {
+                            val songName = songData["name"] as? String
+                            if (songName != null) {
+                                mostPlayedSongs.add(songName)
+                            }
+                        }
+                    }
+                    callback(mostPlayedSongs)  // Reverse to get descending order
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("MainActivity", "Failed to fetch most played songs: ${error.message}")
+                }
+            })
+    }
+
+
 
     private fun clearSelectedSongFromSharedPreferences() {
         val editor = sharedPreferences.edit()

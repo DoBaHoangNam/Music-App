@@ -72,11 +72,11 @@
         android:weightSum="1">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center_vertical"
-            android:layout_weight="0.5"
+            android:layout_weight="0.60"
             >
 
             <TextView
@@ -90,7 +90,7 @@
 
             <TextView
                 android:id="@+id/welcomeUserTv"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/definite_dimen_30"
                 android:fontFamily="@font/sofiapro_light"
@@ -99,11 +99,11 @@
         </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_weight="0.5"
+        android:layout_weight="0.4"
         >
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/statusLoti"
@@ -157,15 +157,15 @@
                     android:textSize="@dimen/text_size_normal" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnLastAdded"
+                    android:id="@+id/btnFavourite"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
                     android:background="@drawable/rectangle_small"
-                    android:drawableStart="@drawable/icon_add"
+                    android:drawableStart="@drawable/baseline_favorite_24"
                     android:fontFamily="@font/sofiapro_light"
                     android:paddingLeft="@dimen/definite_dimen_12"
-                    android:text="Last Added"
+                    android:text="Favourite"
                     android:textAlignment="center"
                     android:textAllCaps="false"
                     android:textSize="@dimen/text_size_normal" />

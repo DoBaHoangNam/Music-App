@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/definite_dimen_12"
+    android:paddingBottom="@dimen/definite_dimen_12"
+
+    android:layout_margin="@dimen/definite_dimen_12">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit playlist"
+        android:layout_marginBottom="@dimen/definite_dimen_12"
+        android:textSize="@dimen/text_size_xnormal"/>
+
+    <EditText
+        android:id="@+id/etChangePlaylistName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Playlist name" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_marginTop="@dimen/definite_dimen_12">
+
+        <TextView
+            android:id="@+id/btnCancel"
+            android:layout_width="@dimen/definite_dimen_0"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:gravity="center"
+            android:layout_weight="1"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#EEF1F4" />
+
+        <TextView
+            android:id="@+id/btnChange"
+            android:layout_width="@dimen/definite_dimen_0"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:gravity="center"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -9,6 +9,7 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.musicapp.DataHolder
@@ -29,7 +30,7 @@ class ActivitySplashScreen : AppCompatActivity() {
         setContentView(R.layout.activity_splash_screen)
         // Kiểm tra trạng thái đăng nhập
         val sharedPreferences = getSharedPreferences("login_state", Context.MODE_PRIVATE)
-        val isLoggedIn = sharedPreferences.getBoolean("logged_in", false)
+        var isLoggedIn = sharedPreferences.getBoolean("logged_in", false)
 
         if (isLoggedIn) {
             // Nếu đã đăng nhập, kiểm tra quyền truy cập và tải dữ liệu
@@ -42,12 +43,30 @@ class ActivitySplashScreen : AppCompatActivity() {
                     arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                     REQUEST_CODE_READ_EXTERNAL_STORAGE
                 )
-            } else {
+            }else {
                 loadMusicDataInBackground()
             }
         } else {
             // Nếu chưa đăng nhập, chuyển đến ActivityGettingStarted
             navigateToGettingStartedScreen()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CODE_READ_EXTERNAL_STORAGE) {
+            // Kiểm tra nếu quyền đã được cấp
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Quyền đã được cấp, tải dữ liệu
+                loadMusicDataInBackground()
+            } else {
+                // Quyền không được cấp, có thể hiển thị thông báo cho người dùng
+                showPermissionDeniedMessage()
+            }
         }
     }
 
@@ -244,4 +263,9 @@ class ActivitySplashScreen : AppCompatActivity() {
     companion object {
         private const val REQUEST_CODE_READ_EXTERNAL_STORAGE = 100
     }
+
+    private fun showPermissionDeniedMessage() {
+        Toast.makeText(this, "Permission denied. Unable to load music data.", Toast.LENGTH_SHORT).show()
+    }
+
 }
