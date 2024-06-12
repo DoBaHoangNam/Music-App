@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.FragmentSelectTracks">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ExtraText">
+
+        <CheckBox
+            android:id="@+id/cbSelectSongAll"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginEnd="@dimen/definite_dimen_20"/>
+
+        <TextView
+            android:id="@+id/tvExplore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center"
+            android:layout_marginEnd="@dimen/definite_dimen_40"
+            android:ellipsize="end"
+            android:fontFamily="@font/sofia_pro_bold"
+            android:maxLines="1"
+            android:text="Select tracks"
+            android:textSize="@dimen/text_size_xxnormal" />
+
+        <TextView
+            android:id="@+id/tvDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center"
+            android:layout_marginEnd="@dimen/definite_dimen_40"
+            android:ellipsize="end"
+            android:fontFamily="@font/sofia_pro_bold"
+            android:maxLines="1"
+            android:text="Done"
+            android:textSize="@dimen/text_size_xxnormal" />
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recvSong"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/definite_dimen_0"
+        app:layout_constraintTop_toBottomOf="@id/toolBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="@dimen/definite_dimen_18"
+        android:layout_marginBottom="@dimen/definite_dimen_10"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

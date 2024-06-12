@@ -19,14 +19,4 @@ class SongViewModel : ViewModel() {
         MutableLiveData<MutableList<Artist>>()
     }
 
-    val selectedSong: MutableLiveData<Song> by lazy {
-        MutableLiveData<Song>()
-    }
-
-    private val _isFromSearchActivity = MutableLiveData<Boolean>()
-    val isFromSearchActivity: LiveData<Boolean> = _isFromSearchActivity
-
-    fun clearSourceFlag() {
-        _isFromSearchActivity.value = false
-    }
 }

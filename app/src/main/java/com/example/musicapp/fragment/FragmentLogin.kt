@@ -174,7 +174,7 @@ class FragmentLogin : Fragment() {
                             editor.apply()
 
                             val email = account?.email
-                            val user = User(email, "")
+                            val user = User(email,email, "")
                             val userId = FirebaseAuth.getInstance()
                                 .currentUser!!.uid
                             database.child("user").child(userId).setValue(user)
@@ -198,6 +198,7 @@ class FragmentLogin : Fragment() {
                 }
             }
         }
+
 
     private fun updateUi(user: FirebaseUser?) {
         val intent = Intent(requireContext(), ActivitySplashScreen::class.java)

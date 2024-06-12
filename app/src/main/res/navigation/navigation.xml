@@ -13,6 +13,12 @@
         <action
             android:id="@+id/action_fragmentForYou_to_fragmentAlbumSingle"
             app:destination="@id/fragmentAlbumSingle" />
+        <action
+            android:id="@+id/action_fragmentForYou_to_fragmentPlaylistSpecific"
+            app:destination="@id/fragmentPlaylistSpecific" />
+        <action
+            android:id="@+id/action_fragmentForYou_to_fragmentAlbumSelected"
+            app:destination="@id/fragmentAlbumSelected" />
     </fragment>
     <fragment
         android:id="@+id/fragmentSongs"
@@ -36,6 +42,9 @@
         <action
             android:id="@+id/action_fragmentPlaylist_to_fragmentPlaylistSpecific"
             app:destination="@id/fragmentPlaylistSpecific" />
+        <action
+            android:id="@+id/action_fragmentPlaylist_to_fragmentSelectTracks"
+            app:destination="@id/fragmentSelectTracks" />
     </fragment>
     <fragment
         android:id="@+id/fragmentArtist"
@@ -75,5 +84,32 @@
         <action
             android:id="@+id/action_fragmentArtistSingle_to_fragmentArtist"
             app:destination="@id/fragmentArtist" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentSelectTracks"
+        android:name="com.example.musicapp.fragment.FragmentSelectTracks"
+        android:label="FragmentSelectTracks" >
+        <action
+            android:id="@+id/action_fragmentSelectTracks_to_fragmentPlaylist"
+            app:destination="@id/fragmentPlaylist" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/currentFragment"
+        android:name="com.example.musicapp.CurrentFragment"
+        tools:layout="@layout/fragment_current">
+        <action
+            android:id="@+id/action_currentFragment_to_fragmentAlbumSelected"
+            app:destination="@id/fragmentAlbumSelected" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentAlbumSelected"
+        android:name="com.example.musicapp.fragment.FragmentAlbumSelected"
+        android:label="fragment_album_selected"
+        tools:layout="@layout/activity_album_selected" >
+        <action
+            android:id="@+id/action_fragmentAlbumSelected_to_fragmentPlaylist"
+            app:destination="@id/fragmentPlaylist" />
     </fragment>
 </navigation>

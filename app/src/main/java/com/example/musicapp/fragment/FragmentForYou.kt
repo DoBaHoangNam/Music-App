@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.musicapp.ui.ActivitySettings
+import com.example.musicapp.DataHolder
 import com.example.musicapp.MediaPlayerControl
 import com.example.musicapp.R
 import com.example.musicapp.SongViewModel
@@ -20,7 +20,15 @@ import com.example.musicapp.adapter.AlbumAdapter
 import com.example.musicapp.databinding.FragmentForYouBinding
 import com.example.musicapp.model.Album
 import com.example.musicapp.model.Song
+import com.example.musicapp.model.User
 import com.example.musicapp.ui.ActivitySearch
+import com.example.musicapp.ui.ActivitySettings
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.util.Calendar
 
 class FragmentForYou : Fragment() {
@@ -31,6 +39,10 @@ class FragmentForYou : Fragment() {
     private var songs: MutableList<Song> = mutableListOf()
     private val songViewModel: SongViewModel by activityViewModels()
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var databaseReference: DatabaseReference
+    private lateinit var database: FirebaseDatabase
+    private lateinit var auth: FirebaseAuth
+    private lateinit var userId: String
 
 
     override fun onAttach(context: Context) {
@@ -77,6 +89,10 @@ class FragmentForYou : Fragment() {
             binding.statusLoti.setAnimation(R.raw.moon_loti)
         }
 
+        auth = FirebaseAuth.getInstance()
+        databaseReference = FirebaseDatabase.getInstance().reference
+
+        retrieveUser()
 
         songViewModel.albumList.observe(viewLifecycleOwner) { albumList ->
             displayAlbum(albumList)
@@ -106,9 +122,49 @@ class FragmentForYou : Fragment() {
                 val randomSong = songs[randomIndex]
                 mediaPlayerControl?.playSong(randomSong)
                 Log.d("check_source", randomSong.toString() + " shuffle")
-                sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                sharedPreferences =
+                    requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
                 sharedPreferences.edit().putString("selected_song", randomSong.songName).apply()
             }
+        }
+
+        binding.btnHistory.setOnClickListener {
+            var listSongPlayed = DataHolder.playedSongs
+            val namePlaylist = "Recent Played"
+            val bundle = Bundle().apply {
+                putStringArrayList("listSongInPlaylist", ArrayList(listSongPlayed))
+                putString("namePlaylist", namePlaylist)
+            }
+            findNavController().navigate(
+                R.id.action_fragmentForYou_to_fragmentPlaylistSpecific,
+                bundle
+            )
+        }
+
+        binding.btnFavourite.setOnClickListener {
+            var listSongFavorite = DataHolder.favouriteSongs
+            val namePlaylist = "Favourite"
+            val bundle = Bundle().apply {
+                putStringArrayList("listSongInPlaylist", ArrayList(listSongFavorite))
+                putString("namePlaylist", namePlaylist)
+            }
+            findNavController().navigate(
+                R.id.action_fragmentForYou_to_fragmentPlaylistSpecific,
+                bundle
+            )
+        }
+
+        binding.btnMostPlay.setOnClickListener {
+            var mostPlayedSongs = DataHolder.mostPlayedSongs
+            val namePlaylist = "Most Played"
+            val bundle = Bundle().apply {
+                putStringArrayList("listSongInPlaylist", ArrayList(mostPlayedSongs))
+                putString("namePlaylist", namePlaylist)
+            }
+            findNavController().navigate(
+                R.id.action_fragmentForYou_to_fragmentPlaylistSpecific,
+                bundle
+            )
         }
 
         return binding.root
@@ -116,10 +172,35 @@ class FragmentForYou : Fragment() {
 
     }
 
+    private fun retrieveUser() {
+        database = FirebaseDatabase.getInstance()
+        userId = auth.currentUser?.uid ?: ""
+
+        val userRef: DatabaseReference = database.reference.child("user").child(userId)
+
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    val user = snapshot.getValue(User::class.java)
+                    if (user != null) {
+                        binding.welcomeUserTv.text = user.username?.substringBefore('@') ?: ""
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+    }
+
     private fun displayAlbum(albumList: MutableList<Album>) {
         val defaultImage = R.mipmap.ic_song_round_high.toString()
         // Filter the album list to include only albums with a non-empty albumArt
-        val filteredAlbumList = albumList.filter { it.albumArt.isNotEmpty() && it.albumArt != defaultImage }
+        val filteredAlbumList =
+            albumList.filter { it.albumArt.isNotEmpty() && it.albumArt != defaultImage }
 
         // Limit the list to the first 10 albums
         val limitedAlbumList = filteredAlbumList.shuffled().take(10).toMutableList()
@@ -141,5 +222,6 @@ class FragmentForYou : Fragment() {
             return fragment
         }
     }
+
 
 }

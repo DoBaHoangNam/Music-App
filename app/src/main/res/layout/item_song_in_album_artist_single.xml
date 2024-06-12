@@ -70,7 +70,7 @@
         android:layout_marginEnd="@dimen/definite_dimen_10"
         android:layout_marginTop="@dimen/definite_dimen_10"/>
     <TextView
-        android:id="@+id/icClose"
+        android:id="@+id/icOption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0.05"
