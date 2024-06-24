@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,7 @@ import com.example.musicapp.adapter.SongAdapter
 import com.example.musicapp.databinding.FragmentSongsBinding
 import com.example.musicapp.model.Song
 import com.example.musicapp.ui.ActivitySearch
+import com.example.musicapp.ui.MainActivity
 
 
 class FragmentSongs : Fragment(),SharedPreferences.OnSharedPreferenceChangeListener {
@@ -63,6 +65,7 @@ class FragmentSongs : Fragment(),SharedPreferences.OnSharedPreferenceChangeListe
         songViewModel.songList.observe(viewLifecycleOwner) { songList ->
             displaySong(songList)
             songs = songList
+            if(songs.isEmpty()) Toast.makeText(requireContext(),"Song list is empty. Please download song",Toast.LENGTH_SHORT).show()
         }
 
         binding.icSearch.setOnClickListener {
@@ -112,7 +115,7 @@ class FragmentSongs : Fragment(),SharedPreferences.OnSharedPreferenceChangeListe
         currentSongIndex = sharedPreferences.getInt("currentSongIndex", 0)
 
         adapter = SongAdapter(requireContext(), songList) { song ->
-            mediaPlayerControl?.playSong(song)
+            mediaPlayerControl?.checkPlaySong(song, MainActivity.SongSource.A)
 
         }
         binding.recvSong.adapter = adapter

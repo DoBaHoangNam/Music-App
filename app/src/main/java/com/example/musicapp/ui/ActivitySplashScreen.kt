@@ -4,7 +4,9 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.MediaMetadataRetriever
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
@@ -16,7 +18,10 @@ import com.example.musicapp.DataHolder
 import com.example.musicapp.R
 import com.example.musicapp.model.Album
 import com.example.musicapp.model.Artist
+import com.example.musicapp.model.SharePlaylist
 import com.example.musicapp.model.Song
+import com.google.common.reflect.TypeToken
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -50,6 +55,7 @@ class ActivitySplashScreen : AppCompatActivity() {
             // Nếu chưa đăng nhập, chuyển đến ActivityGettingStarted
             navigateToGettingStartedScreen()
         }
+
     }
 
     override fun onRequestPermissionsResult(
@@ -82,6 +88,12 @@ class ActivitySplashScreen : AppCompatActivity() {
             val songList = songListDeferred.await()
             val albumList = albumListDeferred.await()
             val artistList = artistListDeferred.await()
+
+            // Kiểm tra thư mục data=/storage/emulated/0/Android/data/com.example.musicapp/files/Music/
+            val additionalSongs = checkAdditionalSongs()
+
+            // Thêm các bài hát từ thư mục trên vào songList
+            songList.addAll(additionalSongs)
 
 
             Log.d("check_source", albumList.size.toString() + " album")
@@ -151,7 +163,7 @@ class ActivitySplashScreen : AppCompatActivity() {
             selectionArgs = selectionArgs,
             sortOrder = MediaStore.Audio.Media.TITLE + " ASC"
         ) { cursor ->
-            val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID))
+            val id = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID))
             val title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE))
             val artist =
                 cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST))
@@ -259,6 +271,42 @@ class ActivitySplashScreen : AppCompatActivity() {
         return list
     }
 
+    private fun checkAdditionalSongs(): List<Song> {
+        val additionalSongs = mutableListOf<Song>()
+        val musicDir = getExternalFilesDir(Environment.DIRECTORY_MUSIC)
+
+        if (musicDir != null) {
+            musicDir.listFiles()?.forEach { file ->
+                if (file.isFile && file.extension == "mp3") {
+                    val retriever = MediaMetadataRetriever()
+                    retriever.setDataSource(file.path)
+
+                    val artist = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
+                    val album = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
+                    val durationStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                    val image = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_IMAGE)
+                    val duration = durationStr?.toLong() ?: 0L
+
+                    retriever.release()
+
+                    val song = Song(
+                        id = "0",
+                        songName = file.nameWithoutExtension,
+                        singerName = artist ?: "Unknown",
+                        album = album ?: "Unknown",  // You may need to retrieve album info as well
+                        duration = duration,
+                        data = file.path,
+                        image = image ?: R.drawable.ic_song_foreground.toString()
+                    )
+                    additionalSongs.add(song)
+                }
+            }
+        }
+
+        return additionalSongs
+    }
+
+
 
     companion object {
         private const val REQUEST_CODE_READ_EXTERNAL_STORAGE = 100
@@ -267,5 +315,6 @@ class ActivitySplashScreen : AppCompatActivity() {
     private fun showPermissionDeniedMessage() {
         Toast.makeText(this, "Permission denied. Unable to load music data.", Toast.LENGTH_SHORT).show()
     }
+
 
 }

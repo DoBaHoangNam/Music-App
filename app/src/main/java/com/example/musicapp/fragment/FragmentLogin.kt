@@ -174,11 +174,26 @@ class FragmentLogin : Fragment() {
                             editor.apply()
 
                             val email = account?.email
-                            val user = User(email,email, "")
                             val userId = FirebaseAuth.getInstance()
                                 .currentUser!!.uid
-                            database.child("user").child(userId).setValue(user)
-                            updateUi(authTask.result?.user)
+                            database.child("user").child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                    if (!dataSnapshot.exists()) {
+                                        // User does not exist, save user to database
+                                        val user = User(userId, email, email, "")
+                                        database.child("user").child(userId).setValue(user)
+                                    }
+                                    updateUi(authTask.result?.user)
+                                }
+
+                                override fun onCancelled(databaseError: DatabaseError) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Database error: ${databaseError.message}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            })
                         } else {
                             Toast.makeText(
                                 requireContext(),

@@ -4,16 +4,17 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Song(
-    val id: Long,
+    var id: String,
     val songName: String,
     val singerName: String,
     val album: String,
     val duration: Long,
-    val data: String,
+    var data: String,
     val image: String
 ) : Parcelable {
+    constructor() : this("", "", "", "", 0, "", "")
     constructor(parcel: Parcel) : this(
-        parcel.readLong(),
+        parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
@@ -23,7 +24,7 @@ data class Song(
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeLong(id)
+        parcel.writeString(id)
         parcel.writeString(songName)
         parcel.writeString(singerName)
         parcel.writeString(album)

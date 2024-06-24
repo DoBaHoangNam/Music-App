@@ -26,7 +26,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
 
@@ -103,9 +106,10 @@ class FragmentSignUp : Fragment() {
     private fun saveUserData() {
         email = binding.email.text.toString().trim()
         password = binding.password.text.toString().trim()
-        val user = User(email,email, password)
         val userId = FirebaseAuth.getInstance()
             .currentUser!!.uid
+        val user = User(userId,email,email, password)
+
         database.child("user").child(userId).setValue(user)
     }
 
@@ -124,11 +128,27 @@ class FragmentSignUp : Fragment() {
                                 Toast.LENGTH_SHORT
                             ).show()
                             val email = account?.email
-                            val user = User(email,email, "")
                             val userId = FirebaseAuth.getInstance()
                                 .currentUser!!.uid
-                            database.child("user").child(userId).setValue(user)
-                            updateUi(authTask.result?.user)
+                            database.child("user").child(userId).addListenerForSingleValueEvent(object :
+                                ValueEventListener {
+                                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                    if (!dataSnapshot.exists()) {
+                                        // User does not exist, save user to database
+                                        val user = User(userId, email, email, "")
+                                        database.child("user").child(userId).setValue(user)
+                                    }
+                                    updateUi(authTask.result?.user)
+                                }
+
+                                override fun onCancelled(databaseError: DatabaseError) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Database error: ${databaseError.message}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            })
                         } else {
                             Toast.makeText(requireContext(), "Sign-up with Google failed", Toast.LENGTH_SHORT)
                                 .show()

@@ -1,5 +1,6 @@
 package com.example.musicapp.fragment
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
@@ -28,8 +29,11 @@ import com.example.musicapp.databinding.FragmentPlaylistBinding
 import com.example.musicapp.model.Playlist
 import com.example.musicapp.model.Song
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 
 class FragmentPlaylist : Fragment() {
@@ -46,6 +50,7 @@ class FragmentPlaylist : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,6 +65,19 @@ class FragmentPlaylist : Fragment() {
             displayPlaylist(listOfPlaylists)
             Log.d("FragmentPlaylist", "$listOfPlaylists" + "1")
         }
+
+        fetchSharePlaylist { playlistCount ->
+            binding.tvNumberOfSharePlaylist.text = "$playlistCount playlists"
+            Log.d("MainActivity", "Number of shared playlists: $playlistCount")
+            // Do something with playlistCount
+        }
+
+        binding.sharePlaylist.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_fragmentPlaylist_to_fragmentSharedPlaylist
+            )
+        }
+
 
 
         binding.icSearch.setOnClickListener {
@@ -217,6 +235,29 @@ class FragmentPlaylist : Fragment() {
             }
         }
     }
+
+    private fun fetchSharePlaylist(callback: (Int) -> Unit) {
+        val database = FirebaseDatabase.getInstance().reference
+        userId = auth.currentUser?.uid ?: ""
+        val playlistRef = database.child("user").child(userId).child("sharedPlaylist")
+
+        playlistRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val playlistCount = dataSnapshot.childrenCount.toInt()
+                    callback(playlistCount)
+                } else {
+                    callback(0)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("fetchSharePlaylist", "Failed to fetch playlists: ${databaseError.message}")
+                callback(0)
+            }
+        })
+    }
+
 
 
 }

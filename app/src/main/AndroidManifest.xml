@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -41,15 +42,16 @@
             android:name=".ui.ActivitySearch"
             android:exported="false" />
         <activity
-            android:name=".ActivitySignUp"
-            android:exported="false" />
-        <activity
             android:name=".ui.ActivityLoginSignin"
             android:exported="false" />
         <activity
             android:name=".ui.ActivityGettingStarted"
             android:exported="false"
             android:label="@string/title_activity_getting_started" />
+        <activity
+            android:name=".ui.ActivitySearchUser"
+            android:exported="false"
+            android:label="@string/title_activity_search_user" />
         <activity
             android:name=".ui.ActivitySplashScreen"
             android:exported="true">
@@ -62,6 +64,24 @@
         <activity
             android:name=".ui.MainActivity"
             android:exported="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <service
+            android:name=".MusicPlayerService"
+            android:enabled="true"
+            android:exported="false" />
+
+
+
     </application>
 
 </manifest>
