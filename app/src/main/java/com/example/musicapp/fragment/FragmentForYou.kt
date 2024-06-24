@@ -17,12 +17,14 @@ import com.example.musicapp.MediaPlayerControl
 import com.example.musicapp.R
 import com.example.musicapp.SongViewModel
 import com.example.musicapp.adapter.AlbumAdapter
+import com.example.musicapp.adapter.TrendingAdapter
 import com.example.musicapp.databinding.FragmentForYouBinding
 import com.example.musicapp.model.Album
 import com.example.musicapp.model.Song
 import com.example.musicapp.model.User
 import com.example.musicapp.ui.ActivitySearch
 import com.example.musicapp.ui.ActivitySettings
+import com.example.musicapp.ui.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -43,6 +45,7 @@ class FragmentForYou : Fragment() {
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
     private lateinit var userId: String
+    private var listOfTrendingSong = mutableListOf<Song>()
 
 
     override fun onAttach(context: Context) {
@@ -120,7 +123,7 @@ class FragmentForYou : Fragment() {
             if (songs.isNotEmpty()) {
                 val randomIndex = (0 until songs.size).random()
                 val randomSong = songs[randomIndex]
-                mediaPlayerControl?.playSong(randomSong)
+                mediaPlayerControl?.checkPlaySong(randomSong, MainActivity.SongSource.A)
                 Log.d("check_source", randomSong.toString() + " shuffle")
                 sharedPreferences =
                     requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
@@ -167,6 +170,12 @@ class FragmentForYou : Fragment() {
             )
         }
 
+        fetchSharePlaylist{trendingSongs ->
+            listOfTrendingSong = trendingSongs
+            displayTrendingSongs(listOfTrendingSong)
+            Log.d("FragmentPlaylist", "$listOfTrendingSong" + "1")
+        }
+
         return binding.root
 
 
@@ -211,6 +220,38 @@ class FragmentForYou : Fragment() {
         val adapter = AlbumAdapter(limitedAlbumList, findNavController())
         binding.recvSuggestion.adapter = adapter
         Log.d("album_check", limitedAlbumList.size.toString())
+    }
+
+    private fun displayTrendingSongs(trendingSongs: MutableList<Song>) {
+        binding.recvTrending.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        val adapter = TrendingAdapter(trendingSongs, requireContext())
+        binding.recvTrending.adapter = adapter
+        Log.d("album_check", trendingSongs.size.toString())
+    }
+
+    private fun fetchSharePlaylist(callback: (MutableList<Song>) -> Unit) {
+        val database = FirebaseDatabase.getInstance().reference
+        userId = auth.currentUser?.uid ?: ""
+        val trendingSongRef = database.child("trending")
+
+        trendingSongRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val trendingSongs = mutableListOf<Song>()
+                for (trendingSongsSnapshot in dataSnapshot.children) {
+                    val song = trendingSongsSnapshot.getValue(Song::class.java)
+                    song?.let {
+                        trendingSongs.add(it)
+                    }
+                }
+                callback(trendingSongs)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("fetchSharePlaylist", "Failed to fetch playlists: ${databaseError.message}")
+                callback(mutableListOf()) // Return an empty list on failure
+            }
+        })
     }
 
     companion object {

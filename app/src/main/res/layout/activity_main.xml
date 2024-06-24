@@ -175,23 +175,6 @@
                         android:text="Now Playing"
                         android:textSize="@dimen/text_size_xxnormal" />
 
-
-                    <ImageView
-                        android:id="@+id/icMoreOption"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_marginEnd="@dimen/definite_dimen_14"
-                        android:src="@drawable/baseline_more_vert_24" />
-
-                    <ImageView
-                        android:id="@+id/icListSong"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_marginEnd="@dimen/definite_dimen_14"
-                        android:src="@drawable/baseline_queue_music_24" />
-
                     <ImageView
                         android:id="@+id/icVolume"
                         android:layout_width="wrap_content"

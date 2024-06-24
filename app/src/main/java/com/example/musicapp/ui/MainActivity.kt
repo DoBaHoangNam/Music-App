@@ -1,13 +1,19 @@
 package com.example.musicapp.ui
 
+
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.ServiceConnection
 import android.content.SharedPreferences
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
+import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import android.view.MotionEvent
@@ -17,14 +23,14 @@ import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.example.musicapp.R
 import com.example.musicapp.DataHolder
 import com.example.musicapp.MediaPlayerControl
+import com.example.musicapp.MusicPlayerService
 import com.example.musicapp.SongViewModel
 import com.example.musicapp.databinding.ActivityMainBinding
 import com.example.musicapp.model.Album
@@ -37,6 +43,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.gson.Gson
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.CoroutineScope
@@ -71,7 +78,49 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
     private lateinit var userId: String
+    private val KEY_SHARED_SONG = "share_song"
+    private var musicPlayerService: MusicPlayerService? = null
+    private var serviceBound = false
 
+    enum class SongSource {
+        A, B
+    }
+
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            val binder = service as MusicPlayerService.MusicServiceBinder
+            musicPlayerService = binder.getService()
+            serviceBound = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName) {
+            serviceBound = false
+        }
+    }
+
+    private val musicPlayerReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when (intent?.action) {
+                "com.example.musicplayer.ACTION_PLAY" -> {
+                    playPauseSong()
+                    Log.d("check_sercice", "currentIndex " + currentSongIndex.toString())
+                }
+                "com.example.musicplayer.ACTION_PAUSE" -> {
+                    playPauseSong()
+                    Log.d("check_sercice", "currentIndex " + currentSongIndex.toString())
+                }
+                "com.example.musicplayer.ACTION_NEXT" -> {
+                    skipToNextSong()
+                    Log.d("check_sercice", "currentIndex " + currentSongIndex.toString())
+                }
+                "com.example.musicplayer.ACTION_PREVIOUS" -> {
+                    backToPreviousSong()
+                    Log.d("check_sercice", "currentIndex " + currentSongIndex.toString())
+
+                }
+            }
+        }
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,6 +137,7 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
         songList = DataHolder.songList
         albumList = DataHolder.albumList
         artistList = DataHolder.artistList
+        musicPlayerService?.totalSong = songList.size
 
         getPlayedSongsList { playedSongs ->
             DataHolder.playedSongs = playedSongs
@@ -137,36 +187,80 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
             layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
         }
 
+        binding.btnShareLoti.setOnClickListener {
+            val songToShare = songList[currentSongIndex]
+            Log.d("MainActivity", "Button share clicked, song: $songToShare")
+
+            val intent = Intent(this, ActivitySearchUser::class.java).apply {
+                putExtra("song_name", songToShare)
+            }
+            startActivity(intent)
+        }
+
+        val filter = IntentFilter().apply {
+            addAction("com.example.musicplayer.ACTION_PLAY")
+            addAction("com.example.musicplayer.ACTION_PAUSE")
+            addAction("com.example.musicplayer.ACTION_NEXT")
+            addAction("com.example.musicplayer.ACTION_PREVIOUS")
+        }
+        LocalBroadcastManager.getInstance(this).registerReceiver(musicPlayerReceiver, filter)
+
+        // Start and bind service
+        val intent = Intent(this, MusicPlayerService::class.java)
+        startService(intent)
+        bindService(intent, connection, Context.BIND_AUTO_CREATE)
 
 
 
         binding.icPlay.setOnClickListener {
             playPauseSong()
+            musicPlayerService?.checkPlaySong(songList[currentSongIndex], isPlaying)
+            musicPlayerService?.song = songList[currentSongIndex]
         }
 
         binding.playBtn.setOnClickListener {
             playPauseSong()
+            musicPlayerService?.checkPlaySong(songList[currentSongIndex], isPlaying)
+            musicPlayerService?.song = songList[currentSongIndex]
+            musicPlayerService?.currentSongIndex = currentSongIndex
+            musicPlayerService?.isPlaying = isPlaying
         }
 
         // Add click listeners for skip and back buttons
         binding.icNext.setOnClickListener {
             skipToNextSong() // Skip to the next song
             Log.d("check_song", currentSongIndex.toString())
+            musicPlayerService?.checkPlaySong(songList[currentSongIndex], isPlaying)
+            musicPlayerService?.song = songList[currentSongIndex]
+            musicPlayerService?.currentSongIndex = currentSongIndex
+            musicPlayerService?.isPlaying = isPlaying
         }
 
         binding.icBack.setOnClickListener {
             backToPreviousSong() // Go back to the previous song
             Log.d("check_song", currentSongIndex.toString())
+            musicPlayerService?.checkPlaySong(songList[currentSongIndex], isPlaying)
+            musicPlayerService?.song = songList[currentSongIndex]
+            musicPlayerService?.currentSongIndex = currentSongIndex
+            musicPlayerService?.isPlaying = isPlaying
         }
 
         binding.backBtn.setOnClickListener {
             backToPreviousSong() // Go back to the previous song
             Log.d("check_song", currentSongIndex.toString())
+            musicPlayerService?.checkPlaySong(songList[currentSongIndex], isPlaying)
+            musicPlayerService?.song = songList[currentSongIndex]
+            musicPlayerService?.currentSongIndex = currentSongIndex
+            musicPlayerService?.isPlaying = isPlaying
         }
 
         binding.nextBtn.setOnClickListener {
             skipToNextSong() // Skip to the next song
             Log.d("check_song", currentSongIndex.toString())
+            musicPlayerService?.checkPlaySong(songList[currentSongIndex], isPlaying)
+            musicPlayerService?.song = songList[currentSongIndex]
+            musicPlayerService?.currentSongIndex = currentSongIndex
+            musicPlayerService?.isPlaying = isPlaying
         }
 
         binding.icNext.setOnLongClickListener {
@@ -387,7 +481,7 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
             }
             currentSongIndex = nextIndex
             saveCurrentSongIndex()
-            playSong(songList[currentSongIndex])
+            checkPlaySong(songList[currentSongIndex], SongSource.A)
         }
     }
 
@@ -451,7 +545,7 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
     }
 
 
-    override fun playSong(song: Song) {
+    override fun checkPlaySong(song: Song, source: SongSource) {
         mediaPlayer?.release()
         mediaPlayer = MediaPlayer().apply {
             setDataSource(song.data)
@@ -461,7 +555,6 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
         isPlaying = true
         binding.icPlay.setBackgroundResource(R.drawable.baseline_pause_24)
         binding.playBtn.setBackgroundResource(R.drawable.baseline_pause_24)
-
         showBottomSheet(song.songName, song.singerName, song.duration.toString(), song.image ?: "")
         handler.post(updateTimeRunnable)
 
@@ -477,53 +570,66 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
             binding.seekBar.max = (it.duration / 1000).toInt()
         }
 
-        currentSongIndex = songList.indexOf(song)
+        when (source) {
+            SongSource.A -> {
+                binding.icNext.visibility = View.VISIBLE
+                binding.icBack.visibility = View.VISIBLE
+                binding.backBtn.visibility = View.VISIBLE
+                binding.nextBtn.visibility = View.VISIBLE
+                binding.btnshuffle.visibility = View.VISIBLE
+                binding.btnRepeat.visibility = View.VISIBLE
+                binding.icAddToFavorite.visibility = View.VISIBLE
+                binding.btnShareLoti.visibility = View.VISIBLE
+                binding.btnAddToPlaylist.visibility = View.VISIBLE
+
+                currentSongIndex = songList.indexOf(song)
 
 
-        getPlayedSongsList { playedSongs ->
-            var recentPlayed = playedSongs
-            val existingSongIndex = recentPlayed.indexOf(song.songName)
-            if (existingSongIndex != -1) {
-                // Remove the existing song if found
-                recentPlayed.removeAt(existingSongIndex)
+                getPlayedSongsList { playedSongs ->
+                    var recentPlayed = playedSongs
+                    val existingSongIndex = recentPlayed.indexOf(song.songName)
+                    if (existingSongIndex != -1) {
+                        // Remove the existing song if found
+                        recentPlayed.removeAt(existingSongIndex)
+                    }
+                    recentPlayed.add(song.songName)
+                    savePlayedSongsList(recentPlayed)
+
+                    DataHolder.playedSongs = recentPlayed
+                    Log.d("Main_Activity", "$recentPlayed history")
+                }
+
+                checkIfSongIsFavorite(song)
+                incrementPlayCount(song)
+
+                fetchFavoriteSongs { favoriteSongs ->
+                    DataHolder.favouriteSongs = favoriteSongs
+                    Log.d("Main_Activity", "Favorite songs: $favoriteSongs")
+                }
+
+                fetchMostPlayedSongs { mostPlayedSong ->
+                    DataHolder.mostPlayedSongs = mostPlayedSong
+                    Log.d("Main_Activity", "Most Played songs: $mostPlayedSong")
+                }
             }
-            recentPlayed.add(song.songName)
-            savePlayedSongsList(recentPlayed)
 
-            DataHolder.playedSongs = recentPlayed
-            Log.d("Main_Activity", "$recentPlayed history")
-        }
+            SongSource.B -> {
+                binding.icNext.visibility = View.INVISIBLE
+                binding.icBack.visibility = View.INVISIBLE
+                binding.backBtn.visibility = View.INVISIBLE
+                binding.nextBtn.visibility = View.INVISIBLE
+                binding.btnshuffle.visibility = View.INVISIBLE
+                binding.btnRepeat.visibility = View.INVISIBLE
+                binding.icAddToFavorite.visibility = View.INVISIBLE
+                binding.btnShareLoti.visibility = View.INVISIBLE
+                binding.btnAddToPlaylist.visibility = View.INVISIBLE
 
-        checkIfSongIsFavorite(song)
-        incrementPlayCount(song)
-
-        fetchFavoriteSongs { favoriteSongs ->
-            DataHolder.favouriteSongs = favoriteSongs
-            Log.d("Main_Activity", "Favorite songs: $favoriteSongs")
-        }
-
-        fetchMostPlayedSongs { mostPlayedSong ->
-            DataHolder.mostPlayedSongs = mostPlayedSong
-            Log.d("Main_Activity", "Most Played songs: $mostPlayedSong")
-        }
-
-
-    }
-
-    override fun playSong(uri: String) {
-        mediaPlayer?.apply {
-            // Đảm bảo rằng MediaPlayer đang không phát trước khi bắt đầu phát bài hát mới
-            stop()
-            reset()
-            // Set data source là URI của bài hát
-            setDataSource(uri)
-            // Chuẩn bị MediaPlayer để phát bài hát
-            prepareAsync()
-            // Đặt sự kiện để bắt đầu phát khi chuẩn bị đã hoàn thành
-            setOnPreparedListener {
-                start()
             }
         }
+
+
+
+
     }
 
     override fun stopSong() {
@@ -540,9 +646,9 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
         if (isShuffle) {
             currentSongIndex = (songList.indices).random()
         } else {
-            currentSongIndex = if (currentSongIndex + 1 > songList.size) 0 else currentSongIndex + 1
+            currentSongIndex = if (currentSongIndex + 1 == songList.size) 0 else currentSongIndex + 1
         }
-        playSong(songList[currentSongIndex])
+        checkPlaySong(songList[currentSongIndex], SongSource.A)
         saveCurrentSongIndex()
     }
 
@@ -554,7 +660,7 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
             currentSongIndex =
                 if (currentSongIndex - 1 < 0) songList.size - 1 else currentSongIndex - 1
         }
-        playSong(songList[currentSongIndex])
+        checkPlaySong(songList[currentSongIndex], SongSource.A)
         saveCurrentSongIndex()
     }
 
@@ -622,6 +728,8 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
         val editor = sharedPreferences.edit()
         editor.putInt("currentSongIndex", currentSongIndex)
         editor.apply()
+        musicPlayerService?.checkPlaySong(songList[currentSongIndex], isPlaying)
+        musicPlayerService?.updateCurrentIndex(currentSongIndex, songList[currentSongIndex], isPlaying)
     }
 
     private fun restoreCurrentSongIndex() {
@@ -683,6 +791,7 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
     override fun onResume() {
         super.onResume()
         playSelectedSongIfAvailable()
+        playSharedSongIfAvailable()
     }
 
     private fun playSelectedSongIfAvailable() {
@@ -691,7 +800,7 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
         selectedSongName?.let { songName ->
             val song = songList.find { it.songName == songName }
             song?.let {
-                playSong(it)
+                checkPlaySong(it, SongSource.A)
                 saveCurrentSongIndex()
                 Log.d("check_source", it.songName + " song")
                 clearSelectedSongFromSharedPreferences()  // Clear the stored song name after playing
@@ -862,13 +971,68 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
         if (key == KEY_SELECTED_SONG) {
             playSelectedSongIfAvailable()
         }
+        if(key == KEY_SHARED_SONG){
+            playSharedSongIfAvailable()
+        }
     }
+
+    // Hàm để phát bài hát được chia sẻ nếu có sẵn trong SharedPreferences
+    private fun playSharedSongIfAvailable() {
+        sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        val sharedSongJson = sharedPreferences.getString(KEY_SHARED_SONG, null)
+        sharedSongJson?.let { songJson ->
+            val gson = Gson()
+            val sharedSong = gson.fromJson(songJson, Song::class.java)
+            sharedSong?.let {
+
+                Log.d("check_source", it.songName + " shared song")
+                DataHolder.songList.add(it)
+                songList = DataHolder.songList
+                checkPlaySong(it,SongSource.B)
+                Log.d("check_source", songList.size.toString() + " check size")
+                clearSharedSongFromSharedPreferences()  // Xóa bài hát được lưu trữ sau khi phát
+            }
+        }
+    }
+
+
+    // Hàm để xóa bài hát được chia sẻ khỏi SharedPreferences
+    private fun clearSharedSongFromSharedPreferences() {
+        val editor = sharedPreferences.edit()
+        editor.remove(KEY_SHARED_SONG)
+        editor.apply()
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        if (serviceBound) {
+            unbindService(connection)
+            serviceBound = false
+        }
+        if (serviceBound) {
+            musicPlayerService?.stopSelf()
+        }
+        mediaPlayer?.let {
+            if (it.isPlaying) {
+                it.stop()
+            }
+            it.release()
+            mediaPlayer = null
+        }
+        handler.removeCallbacks(updateTimeRunnable)
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(musicPlayerReceiver)
+        stopService(Intent(this, MusicPlayerService::class.java))
     }
 
+    override fun onStop() {
+        super.onStop()
+        if (serviceBound) {
+            unbindService(connection)
+            serviceBound = false
+        }
+    }
 
 }
 

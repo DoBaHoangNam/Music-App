@@ -21,6 +21,7 @@ import com.example.musicapp.databinding.FragmentAlbumSingleBinding
 import com.example.musicapp.model.Album
 import com.example.musicapp.model.Song
 import com.example.musicapp.ui.ActivitySearch
+import com.example.musicapp.ui.MainActivity
 
 
 class FragmentAlbumSingle : Fragment() {
@@ -125,13 +126,13 @@ class FragmentAlbumSingle : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         val adapter = SongInAlbumAdapter(requireContext(),getListSong()){ song ->
-            mediaPlayerControl?.playSong(song)
+            mediaPlayerControl?.checkPlaySong(song, MainActivity.SongSource.A)
 
         }
         binding.icPLayAll.setOnClickListener {
             if (getListSong().isNotEmpty()) {
                 val firstSong = getListSong()[0]
-                mediaPlayerControl?.playSong(firstSong)
+                mediaPlayerControl?.checkPlaySong(firstSong, MainActivity.SongSource.A)
                 adapter.setSelectedItem(0)  // Highlight the first item in the adapter
             }
         }
@@ -141,7 +142,7 @@ class FragmentAlbumSingle : Fragment() {
             if (songList.isNotEmpty()) {
                 val randomIndex = (0 until songList.size).random()
                 val randomSong = songList[randomIndex]
-                mediaPlayerControl?.playSong(randomSong)
+                mediaPlayerControl?.checkPlaySong(randomSong, MainActivity.SongSource.A)
                 adapter.setSelectedItem(randomIndex)  // Highlight the randomly selected item in the adapter
             }
         }

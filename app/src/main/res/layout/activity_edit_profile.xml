@@ -149,18 +149,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:hint="Date Of Birth"
         >
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/dop"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/definite_dimen_18"
-            android:layout_marginRight="@dimen/definite_dimen_18"
-            android:background="@drawable/text_input"
-            android:drawableStart="@drawable/baseline_cake_24"
-            android:drawablePadding="@dimen/definite_dimen_14"
-            android:paddingTop="20dp"
-
-            />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton

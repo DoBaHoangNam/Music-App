@@ -226,6 +226,24 @@
                 android:layout_marginTop="@dimen/definite_dimen_18"
                 android:layout_marginBottom="@dimen/definite_dimen_10"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Trending"
+                android:layout_marginStart="@dimen/definite_dimen_12"
+                android:layout_marginTop="@dimen/definite_dimen_12"
+                android:textSize="@dimen/text_size_large"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recvTrending"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/definite_dimen_10"
+                android:layout_marginEnd="@dimen/definite_dimen_20"
+                android:layout_marginTop="@dimen/definite_dimen_18"
+                android:layout_marginBottom="@dimen/definite_dimen_10"/>
+
         </LinearLayout>
 
     </ScrollView>
