@@ -161,6 +161,14 @@
                         android:text="Change pitch of the song to make it higher or lower"
                         android:textSize="@dimen/text_size_small" />
 
+                    <TextView
+                        android:id="@+id/tvValuePitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/definite_dimen_10"
+                        android:text="0"
+                        android:textSize="@dimen/text_size_small" />
+
                     <SeekBar
                         android:id="@+id/changePitchSeekbar"
                         android:layout_width="match_parent"
@@ -220,11 +228,19 @@
                         android:text="Change pitch of the song to make it higher or lower"
                         android:textSize="@dimen/text_size_small" />
 
+                    <TextView
+                        android:id="@+id/tvValueSpeed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/definite_dimen_10"
+                        android:text="1.0x"
+                        android:textSize="@dimen/text_size_small" />
+
                     <SeekBar
                         android:id="@+id/changeSpeedSeekbar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:max="16"
+                        android:max="15"
                         android:progress="6"
 
                         />

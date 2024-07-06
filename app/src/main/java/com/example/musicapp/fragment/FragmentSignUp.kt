@@ -108,7 +108,7 @@ class FragmentSignUp : Fragment() {
         password = binding.password.text.toString().trim()
         val userId = FirebaseAuth.getInstance()
             .currentUser!!.uid
-        val user = User(userId,email,email, password)
+        val user = User(userId,email,email, password, "")
 
         database.child("user").child(userId).setValue(user)
     }
@@ -135,7 +135,7 @@ class FragmentSignUp : Fragment() {
                                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                                     if (!dataSnapshot.exists()) {
                                         // User does not exist, save user to database
-                                        val user = User(userId, email, email, "")
+                                        val user = User(userId, email, email, "","")
                                         database.child("user").child(userId).setValue(user)
                                     }
                                     updateUi(authTask.result?.user)

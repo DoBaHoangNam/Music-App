@@ -7,4 +7,6 @@ interface MediaPlayerControl {
     fun checkPlaySong(song: Song, source: MainActivity.SongSource)
     fun playPauseSong()
     fun stopSong()
+    fun setPlaybackSpeed()
+    fun setPlaybackPitch()
 }

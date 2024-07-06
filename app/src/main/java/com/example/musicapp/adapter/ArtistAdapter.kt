@@ -36,7 +36,7 @@ class ArtistAdapter(
         holder.singerName.text = currentItem.name
         Glide.with(holder.itemView.context)
             .load(currentItem.image) // Load the image from the URL or URI
-            .placeholder(R.mipmap.ic_person_round) // Placeholder image
+            .placeholder(R.drawable.ic_person_foreground) // Placeholder image
             .into(holder.image)
 
         holder.itemView.setOnClickListener {

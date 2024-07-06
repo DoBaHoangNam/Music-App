@@ -18,10 +18,7 @@ import com.example.musicapp.DataHolder
 import com.example.musicapp.R
 import com.example.musicapp.model.Album
 import com.example.musicapp.model.Artist
-import com.example.musicapp.model.SharePlaylist
 import com.example.musicapp.model.Song
-import com.google.common.reflect.TypeToken
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -48,7 +45,7 @@ class ActivitySplashScreen : AppCompatActivity() {
                     arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                     REQUEST_CODE_READ_EXTERNAL_STORAGE
                 )
-            }else {
+            } else {
                 loadMusicDataInBackground()
             }
         } else {
@@ -146,8 +143,8 @@ class ActivitySplashScreen : AppCompatActivity() {
 
 
     private fun getListSong(): MutableList<Song> {
-        val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0 AND ${MediaStore.Audio.Media.DATA} NOT LIKE ? AND ${MediaStore.Audio.Media.DATA} NOT LIKE ?"
-        val selectionArgs = arrayOf("%recording%", "%ringtone%")
+        val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0 AND ${MediaStore.Audio.Media.DATA} NOT LIKE ? AND ${MediaStore.Audio.Media.DATA} NOT LIKE ? AND ${MediaStore.Audio.Media.TITLE} NOT LIKE ?"
+        val selectionArgs = arrayOf("%recording%", "%ringtone%", "VOICE_%")
         return queryMedia(
             uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
             projection = arrayOf(
@@ -216,9 +213,12 @@ class ActivitySplashScreen : AppCompatActivity() {
             sortOrder = MediaStore.Audio.Albums.ALBUM + " ASC"
         ) { cursor ->
             val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums._ID))
-            val albumName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM))
-            val artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ARTIST))
-            val numberOfSongs = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.NUMBER_OF_SONGS))
+            val albumName =
+                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM))
+            val artist =
+                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ARTIST))
+            val numberOfSongs =
+                cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.NUMBER_OF_SONGS))
             val albumArtUri = getAlbumArtUri(id)
             val imageResId = albumArtUri ?: R.drawable.ic_song_foreground.toString()
 
@@ -281,10 +281,13 @@ class ActivitySplashScreen : AppCompatActivity() {
                     val retriever = MediaMetadataRetriever()
                     retriever.setDataSource(file.path)
 
-                    val artist = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
+                    val artist =
+                        retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
                     val album = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
-                    val durationStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-                    val image = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_IMAGE)
+                    val durationStr =
+                        retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                    val image =
+                        retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_IMAGE)
                     val duration = durationStr?.toLong() ?: 0L
 
                     retriever.release()
@@ -307,13 +310,13 @@ class ActivitySplashScreen : AppCompatActivity() {
     }
 
 
-
     companion object {
         private const val REQUEST_CODE_READ_EXTERNAL_STORAGE = 100
     }
 
     private fun showPermissionDeniedMessage() {
-        Toast.makeText(this, "Permission denied. Unable to load music data.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Permission denied. Unable to load music data.", Toast.LENGTH_SHORT)
+            .show()
     }
 
 

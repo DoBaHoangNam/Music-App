@@ -180,7 +180,7 @@ class FragmentLogin : Fragment() {
                                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                                     if (!dataSnapshot.exists()) {
                                         // User does not exist, save user to database
-                                        val user = User(userId, email, email, "")
+                                        val user = User(userId, email, email, "","")
                                         database.child("user").child(userId).setValue(user)
                                     }
                                     updateUi(authTask.result?.user)

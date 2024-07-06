@@ -11,6 +11,8 @@ import android.content.ServiceConnection
 import android.content.SharedPreferences
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.media.PlaybackParams
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -79,6 +81,8 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
     private lateinit var auth: FirebaseAuth
     private lateinit var userId: String
     private val KEY_SHARED_SONG = "share_song"
+    private val KEY_SPEED_SONG = "playback_speed"
+    private val KEY_PITCH_SONG = "playback_pitch"
     private var musicPlayerService: MusicPlayerService? = null
     private var serviceBound = false
 
@@ -641,6 +645,38 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
         binding.playBtn.setBackgroundResource(R.drawable.baseline_play_arrow_24)
     }
 
+    override fun setPlaybackSpeed() {
+        sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val speed = sharedPreferences.getFloat("playback_speed", 1.0f) // Lấy tốc độ từ SharedPreferences, mặc định là 1.0f
+
+        mediaPlayer?.let {
+            it.playbackParams = it.playbackParams.setSpeed(speed)
+        } ?: run {
+            Log.e("Main_Activity", "MediaPlayer is null, cannot set playback speed")
+        }
+
+    }
+
+    override fun setPlaybackPitch() {
+        sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val pitch = sharedPreferences.getInt("playback_pitch", 0)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mediaPlayer?.let {
+                val params = PlaybackParams().apply {
+                    this.pitch =
+                        Math.pow(2.0, pitch / 12.0).toFloat() // Convert semitone to pitch ratio
+                }
+                it.playbackParams = params
+            } ?: run {
+                Log.e("Main_Activity", "MediaPlayer is null, cannot set playback params")
+            }
+        }
+    }
+
+
+
+
     // Function to skip to the next song
     private fun skipToNextSong() {
         if (isShuffle) {
@@ -974,6 +1010,13 @@ class MainActivity : AppCompatActivity(), MediaPlayerControl,
         if(key == KEY_SHARED_SONG){
             playSharedSongIfAvailable()
         }
+        if(key == KEY_SPEED_SONG){
+            setPlaybackSpeed()
+        }
+        if(key == KEY_PITCH_SONG){
+            setPlaybackPitch()
+        }
+
     }
 
     // Hàm để phát bài hát được chia sẻ nếu có sẵn trong SharedPreferences
