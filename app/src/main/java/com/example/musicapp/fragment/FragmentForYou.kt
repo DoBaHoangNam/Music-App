@@ -192,7 +192,7 @@ class FragmentForYou : Fragment() {
                 if (snapshot.exists()) {
                     val user = snapshot.getValue(User::class.java)
                     if (user != null) {
-                        binding.welcomeUserTv.text = user.username?.substringBefore('@') ?: ""
+                        binding.welcomeUserTv.text = user.username
                     }
                 }
             }

@@ -60,6 +60,7 @@
             >
 
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgProfile"
                 android:layout_width="@dimen/definite_dimen_80"
                 android:layout_height="@dimen/definite_dimen_80"
                 android:layout_gravity="center"
@@ -69,6 +70,7 @@
         </FrameLayout>
 
         <LinearLayout
+            android:id="@+id/changeAvt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
